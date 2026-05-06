@@ -870,36 +870,59 @@ function syncCSV() {
 function syncScript() {
   var url = getVal('script-url');
   var fb = document.getElementById('script-feedback');
-  if (!url) { if (fb) fb.innerHTML = '<div class="notice error">Ingresá la URL del Web App.</div>'; return; }
+  if (!url) { if (fb) fb.innerHTML = '<div class="notice error">Ingresa la URL del Web App.</div>'; return; }
   if (fb) fb.innerHTML = '<div class="notice">Conectando con Apps Script...</div>';
 
-  fetch(url)
-    .then(function(r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
-    .then(function(data) {
-      if (!Array.isArray(data)) { if (fb) fb.innerHTML = '<div class="notice warn">La respuesta no tiene el formato esperado.</div>'; return; }
-      var added = 0;
-      data.forEach(function(row) { if (addFromSheet(row)) added++; });
-      S.sheets.connected = true; S.sheets.url = url; S.sheets.mode = 'script';
-      saveAll();
-      updateSheetsUI();
-      renderInventory(); renderCompany();
-      if (fb) fb.innerHTML = '<div class="notice success">' + added + ' modelo' + (added !== 1 ? 's' : '') + ' sincronizado' + (added !== 1 ? 's' : '') + ' desde Apps Script.</div>';
-      toast(added + ' modelos sincronizados', 'success');
-    })
-    .catch(function(err) {
-      if (fb) fb.innerHTML = '<div class="notice error">Error: ' + err.message + '. Verificá la URL y los permisos del Web App.</div>';
+  var proxies = [
+    url,
+    'https://corsproxy.io/?' + encodeURIComponent(url),
+    'https://api.allorigins.win/raw?url=' + encodeURIComponent(url)
+  ];
+
+  function tryNext(index) {
+    if (index >= proxies.length) {
+      if (fb) fb.innerHTML = '<div class="notice error">No se pudo conectar. Verifica que el Web App este publicado con acceso "Cualquier persona".</div>';
       toast('Error al conectar', 'error');
-    });
+      return;
+    }
+    fetch(proxies[index])
+      .then(function(r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.text(); })
+      .then(function(text) {
+        var data;
+        try { data = JSON.parse(text); } catch(e) { throw new Error('Respuesta invalida'); }
+        if (!Array.isArray(data)) { if (fb) fb.innerHTML = '<div class="notice warn">La respuesta no tiene el formato esperado.</div>'; return; }
+        var added = 0;
+        data.forEach(function(row) { if (addFromSheet(row)) added++; });
+        S.sheets.connected = true; S.sheets.url = url; S.sheets.mode = 'script';
+        saveAll();
+        updateSheetsUI();
+        renderInventory(); renderCompany();
+        if (fb) fb.innerHTML = '<div class="notice success">' + added + ' modelo' + (added !== 1 ? 's' : '') + ' sincronizado' + (added !== 1 ? 's' : '') + ' desde Apps Script.</div>';
+        toast(added + ' modelos sincronizados', 'success');
+      })
+      .catch(function() { tryNext(index + 1); });
+  }
+
+  tryNext(0);
 }
 
 function postToScript(model) {
-  fetch(S.sheets.url, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(model)
-  }).then(function(r) { return r.json(); })
-    .then(function() { toast('Modelo enviado a Google Sheets', 'success'); })
-    .catch(function() { /* silently fail */ });
+  if (!S.sheets.url) return;
+  var proxies = [
+    S.sheets.url,
+    'https://corsproxy.io/?' + encodeURIComponent(S.sheets.url)
+  ];
+  function tryPost(index) {
+    if (index >= proxies.length) return;
+    fetch(proxies[index], {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(model)
+    }).then(function(r) { return r.text(); })
+      .then(function() { toast('Modelo enviado a Google Sheets', 'success'); })
+      .catch(function() { tryPost(index + 1); });
+  }
+  tryPost(0);
 }
 
 function updateSheetsUI() {
