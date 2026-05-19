@@ -1,425 +1,553 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" data-theme="dark">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AutoDesk Pro — Gestión de Concesionarias</title>
+<title>AutoDesk Pro</title>
 <style>
+/* ── TOKENS ── */
 :root {
-  --bg:#07070f;--surface:#0d0d1a;--card:#111122;--border:#1a1a30;--border-bright:#252540;
-  --accent:#38d9a9;--accent-dim:rgba(56,217,169,0.12);--text:#e2e8f0;--text-muted:#64748b;
-  --text-dim:#94a3b8;--good:#4ade80;--bad:#f87171;--warn:#fbbf24;
-  --font-ui:-apple-system,BlinkMacSystemFont,'Segoe UI','Helvetica Neue',sans-serif;
-  --font-mono:'SF Mono','Fira Code','Consolas','Courier New',monospace;
-  --radius:8px;--radius-sm:5px;--transition:140ms ease;
+  --bg:#07070f;--surface:#0d0d1a;--card:#111122;--border:#1a1a30;--border-b:#252540;
+  --accent:#38d9a9;--accent-dim:rgba(56,217,169,.12);--text:#e2e8f0;--muted:#64748b;
+  --dim:#94a3b8;--good:#4ade80;--bad:#f87171;--warn:#fbbf24;--blue:#60a5fa;
+  --font:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  --mono:'SF Mono','Fira Code','Consolas',monospace;
+  --r:8px;--rs:5px;--t:140ms ease;
+}
+[data-theme="light"] {
+  --bg:#f1f5f9;--surface:#ffffff;--card:#ffffff;--border:#e2e8f0;--border-b:#cbd5e1;
+  --accent:#0d9488;--accent-dim:rgba(13,148,136,.1);--text:#0f172a;--muted:#64748b;
+  --dim:#475569;--good:#16a34a;--bad:#dc2626;--warn:#d97706;--blue:#2563eb;
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
-html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--font-ui);font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased;}
-.screen{display:none;min-height:100vh;}
-.screen.active{display:flex;}
+html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--font);font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased;transition:background .2s,color .2s;}
+.screen{display:none;min-height:100vh;}.screen.active{display:flex;}
+
+/* WELCOME */
 #welcome{flex-direction:column;align-items:center;justify-content:center;background:radial-gradient(ellipse at 50% 40%,#0a1828 0%,var(--bg) 65%);position:relative;overflow:hidden;}
-#welcome::before{content:'';position:absolute;width:800px;height:800px;border-radius:50%;background:radial-gradient(circle,rgba(56,217,169,0.05) 0%,transparent 70%);top:50%;left:50%;transform:translate(-50%,-55%);pointer-events:none;}
-.welcome-label{font-family:var(--font-mono);font-size:10px;letter-spacing:.35em;color:var(--accent);text-transform:uppercase;margin-bottom:28px;opacity:.7;}
-.welcome-title{font-size:52px;font-weight:800;letter-spacing:-.04em;color:var(--text);margin-bottom:14px;text-align:center;line-height:1.1;}
-.welcome-title span{color:var(--accent);}
-.welcome-sub{font-size:15px;color:var(--text-muted);margin-bottom:52px;text-align:center;}
-.btn-primary{background:var(--accent);color:#000;border:none;padding:13px 30px;border-radius:var(--radius);font-size:14px;font-weight:700;cursor:pointer;font-family:var(--font-ui);transition:all var(--transition);}
-.btn-primary:hover{background:#4aefc0;transform:translateY(-1px);box-shadow:0 6px 24px rgba(56,217,169,.28);}
-.btn-primary:active{transform:translateY(0);}
-.btn-primary:disabled{opacity:.45;cursor:not-allowed;transform:none;box-shadow:none;}
-.btn-secondary{background:transparent;color:var(--text-dim);border:1px solid var(--border-bright);padding:9px 18px;border-radius:var(--radius-sm);font-size:13px;font-weight:500;cursor:pointer;font-family:var(--font-ui);transition:all var(--transition);}
-.btn-secondary:hover{border-color:var(--accent);color:var(--accent);}
-.btn-ghost{background:transparent;color:var(--text-muted);border:none;padding:6px 12px;border-radius:var(--radius-sm);font-size:12px;cursor:pointer;font-family:var(--font-ui);transition:all var(--transition);}
+[data-theme="light"] #welcome{background:radial-gradient(ellipse at 50% 40%,#e0f2fe 0%,var(--bg) 65%);}
+#welcome::before{content:'';position:absolute;width:800px;height:800px;border-radius:50%;background:radial-gradient(circle,rgba(56,217,169,.05) 0%,transparent 70%);top:50%;left:50%;transform:translate(-50%,-55%);pointer-events:none;}
+.w-label{font-family:var(--mono);font-size:10px;letter-spacing:.35em;color:var(--accent);text-transform:uppercase;margin-bottom:28px;opacity:.7;}
+.w-title{font-size:48px;font-weight:800;letter-spacing:-.04em;color:var(--text);margin-bottom:14px;text-align:center;line-height:1.1;}
+.w-title span{color:var(--accent);}
+.w-sub{font-size:15px;color:var(--muted);margin-bottom:52px;text-align:center;}
+
+/* BUTTONS */
+.btn{background:var(--accent);color:#000;border:none;padding:11px 24px;border-radius:var(--r);font-size:13px;font-weight:700;cursor:pointer;font-family:var(--font);transition:all var(--t);}
+.btn:hover{filter:brightness(1.1);transform:translateY(-1px);}
+.btn:active{transform:translateY(0);}
+.btn:disabled{opacity:.4;cursor:not-allowed;transform:none;filter:none;}
+.btn-out{background:transparent;color:var(--dim);border:1px solid var(--border-b);padding:8px 16px;border-radius:var(--rs);font-size:12px;font-weight:500;cursor:pointer;font-family:var(--font);transition:all var(--t);}
+.btn-out:hover{border-color:var(--accent);color:var(--accent);}
+.btn-ghost{background:transparent;color:var(--muted);border:none;padding:6px 10px;border-radius:var(--rs);font-size:12px;cursor:pointer;font-family:var(--font);transition:all var(--t);}
 .btn-ghost:hover{color:var(--text);background:var(--border);}
-.btn-icon{background:transparent;border:1px solid var(--border-bright);color:var(--text-dim);width:30px;height:30px;border-radius:var(--radius-sm);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;font-size:15px;line-height:1;transition:all var(--transition);flex-shrink:0;}
+.btn-icon{background:transparent;border:1px solid var(--border-b);color:var(--dim);width:28px;height:28px;border-radius:var(--rs);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;font-size:13px;transition:all var(--t);flex-shrink:0;}
 .btn-icon:hover{color:var(--accent);border-color:var(--accent);}
-.btn-sm{padding:7px 14px!important;font-size:12px!important;}
+.btn-sm{padding:6px 12px!important;font-size:11px!important;}
+.btn-danger{background:transparent;color:var(--bad);border:1px solid rgba(248,113,113,.3);padding:6px 10px;border-radius:var(--rs);font-size:11px;cursor:pointer;font-family:var(--font);transition:all var(--t);}
+.btn-danger:hover{background:rgba(248,113,113,.1);}
+
+/* SETUP */
 #setup{flex-direction:column;align-items:center;justify-content:center;background:var(--bg);padding:24px;}
 .setup-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:40px;width:100%;max-width:500px;}
-.setup-back{font-size:12px;color:var(--text-muted);cursor:pointer;margin-bottom:22px;display:flex;align-items:center;gap:5px;width:fit-content;transition:color var(--transition);}
+.setup-back{font-size:12px;color:var(--muted);cursor:pointer;margin-bottom:22px;display:flex;align-items:center;gap:5px;width:fit-content;transition:color var(--t);}
 .setup-back:hover{color:var(--accent);}
 .setup-title{font-size:22px;font-weight:800;color:var(--text);margin-bottom:5px;letter-spacing:-.02em;}
-.setup-sub{font-size:13px;color:var(--text-muted);margin-bottom:28px;}
-.form-group{margin-bottom:15px;}
-.form-label{display:block;font-size:11px;font-weight:600;color:var(--text-muted);margin-bottom:6px;letter-spacing:.07em;text-transform:uppercase;}
-.form-input,.form-select{width:100%;background:var(--surface);border:1px solid var(--border-bright);border-radius:var(--radius-sm);color:var(--text);padding:9px 12px;font-size:13px;font-family:var(--font-ui);outline:none;transition:border-color var(--transition);appearance:none;-webkit-appearance:none;}
-.form-input:focus,.form-select:focus{border-color:var(--accent);}
-.form-input::placeholder{color:var(--text-muted);}
-.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.setup-sub{font-size:13px;color:var(--muted);margin-bottom:28px;}
+
+/* FORMS */
+.fg{margin-bottom:14px;}
+.fl{display:block;font-size:10px;font-weight:700;color:var(--muted);margin-bottom:5px;letter-spacing:.08em;text-transform:uppercase;}
+.fi,.fs{width:100%;background:var(--surface);border:1px solid var(--border-b);border-radius:var(--rs);color:var(--text);padding:8px 11px;font-size:13px;font-family:var(--font);outline:none;transition:border-color var(--t);appearance:none;}
+.fi:focus,.fs:focus{border-color:var(--accent);}
+.fi::placeholder{color:var(--muted);}
+.fr{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.fr3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;}
+
+/* DASHBOARD */
 #dashboard{flex-direction:column;overflow:hidden;height:100vh;}
-.dash-header{background:var(--surface);border-bottom:1px solid var(--border);padding:0 20px;display:flex;align-items:center;height:54px;gap:20px;flex-shrink:0;overflow-x:auto;}
-.dash-logo{font-family:var(--font-mono);font-size:12px;font-weight:700;color:var(--accent);letter-spacing:.12em;flex-shrink:0;}
-.dash-company-name{font-size:12px;color:var(--text-muted);flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.dash-company-name strong{color:var(--text-dim);}
-.dash-nav{display:flex;gap:2px;flex-shrink:0;}
-.nav-tab{padding:7px 14px;font-size:12px;color:var(--text-muted);cursor:pointer;border-radius:var(--radius-sm);transition:all var(--transition);white-space:nowrap;font-weight:500;}
-.nav-tab:hover{color:var(--text);background:rgba(255,255,255,.04);}
-.nav-tab.active{color:var(--accent);background:var(--accent-dim);}
-.dash-body{flex:1;overflow-y:auto;padding:24px;}
-.panel{display:none;}.panel.active{display:block;}
-.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:16px;}
-.card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;gap:12px;}
-.card-title{font-size:11px;font-weight:700;color:var(--text-muted);letter-spacing:.08em;text-transform:uppercase;}
-.info-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:14px;}
-.info-field label{font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.08em;}
-.info-field p{font-size:15px;color:var(--text);font-weight:600;margin-top:2px;}
-.inv-table{width:100%;border-collapse:collapse;font-size:12px;}
-.inv-table th{text-align:left;padding:9px 12px;font-size:10px;font-weight:700;color:var(--text-muted);letter-spacing:.1em;text-transform:uppercase;border-bottom:1px solid var(--border);background:var(--surface);white-space:nowrap;}
-.inv-table td{padding:10px 12px;border-bottom:1px solid var(--border);color:var(--text-dim);font-family:var(--font-mono);vertical-align:middle;}
-.inv-table tr:last-child td{border-bottom:none;}
-.inv-table tbody tr:hover td{background:rgba(255,255,255,.015);}
-.inv-table td:first-child{font-family:var(--font-ui);}
-.model-name{font-weight:700;font-size:13px;color:var(--text);}
-.model-brand{font-size:11px;color:var(--text-muted);margin-top:1px;}
-.source-badge{display:inline-block;padding:2px 7px;border-radius:100px;font-size:10px;font-weight:700;font-family:var(--font-ui);}
-.source-manual{background:rgba(56,217,169,.1);color:var(--accent);}
-.source-sheets{background:rgba(251,191,36,.1);color:var(--warn);}
-.row-selected td{background:rgba(56,217,169,.04)!important;}
-.row-selected td:first-child{padding-left:10px;border-left:2px solid var(--accent);}
-.chips-wrap{display:flex;flex-wrap:wrap;gap:8px;min-height:34px;align-items:center;}
-.chip{display:flex;align-items:center;gap:6px;background:var(--accent-dim);border:1px solid rgba(56,217,169,.25);color:var(--accent);padding:4px 10px 4px 12px;border-radius:100px;font-size:12px;font-weight:600;}
-.chip-x{cursor:pointer;font-size:14px;opacity:.55;line-height:1;transition:opacity var(--transition);}
+.hdr{background:var(--surface);border-bottom:1px solid var(--border);padding:0 18px;display:flex;align-items:center;height:52px;gap:16px;flex-shrink:0;overflow-x:auto;}
+.hdr-logo{font-family:var(--mono);font-size:11px;font-weight:700;color:var(--accent);letter-spacing:.14em;flex-shrink:0;}
+.hdr-co{font-size:12px;color:var(--muted);flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.hdr-co strong{color:var(--dim);}
+.hdr-nav{display:flex;gap:1px;flex-shrink:0;}
+.ntab{padding:6px 13px;font-size:12px;color:var(--muted);cursor:pointer;border-radius:var(--rs);transition:all var(--t);white-space:nowrap;font-weight:500;}
+.ntab:hover{color:var(--text);background:rgba(255,255,255,.04);}
+.ntab.on{color:var(--accent);background:var(--accent-dim);}
+.hdr-right{display:flex;align-items:center;gap:8px;flex-shrink:0;}
+.theme-btn{background:transparent;border:1px solid var(--border-b);color:var(--muted);width:28px;height:28px;border-radius:var(--rs);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:14px;transition:all var(--t);}
+.theme-btn:hover{border-color:var(--accent);color:var(--accent);}
+.body{flex:1;overflow-y:auto;padding:22px;}
+.panel{display:none;}.panel.on{display:block;}
+
+/* CARDS */
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:18px;margin-bottom:14px;}
+.ch{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;gap:10px;}
+.ct{font-size:10px;font-weight:700;color:var(--muted);letter-spacing:.09em;text-transform:uppercase;}
+.igrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:12px;}
+.ifield label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;}
+.ifield p{font-size:15px;color:var(--text);font-weight:700;margin-top:2px;}
+
+/* NOTICE */
+.notice{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:var(--rs);padding:10px 13px;font-size:12px;color:var(--dim);margin-bottom:12px;line-height:1.6;}
+.notice.warn{border-left-color:var(--warn);}.notice.err{border-left-color:var(--bad);}.notice.ok{border-left-color:var(--good);}
+
+/* FILTERS */
+.filters{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:14px;}
+.fi-sm{background:var(--surface);border:1px solid var(--border-b);border-radius:var(--rs);color:var(--text);padding:6px 10px;font-size:12px;font-family:var(--font);outline:none;transition:border-color var(--t);}
+.fi-sm:focus{border-color:var(--accent);}
+.fi-sm::placeholder{color:var(--muted);}
+
+/* TABLE */
+.tbl{width:100%;border-collapse:collapse;font-size:12px;}
+.tbl th{text-align:left;padding:8px 11px;font-size:10px;font-weight:700;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;border-bottom:1px solid var(--border);background:var(--surface);white-space:nowrap;cursor:pointer;user-select:none;}
+.tbl th:hover{color:var(--text);}
+.tbl th .sort-icon{opacity:.3;margin-left:4px;font-size:9px;}
+.tbl th.sort-asc .sort-icon::after{content:'▲';opacity:1;}
+.tbl th.sort-desc .sort-icon::after{content:'▼';opacity:1;}
+.tbl td{padding:9px 11px;border-bottom:1px solid var(--border);color:var(--dim);vertical-align:middle;}
+.tbl tr:last-child td{border-bottom:none;}
+.tbl tbody tr:hover td{background:rgba(255,255,255,.012);}
+.tbl td:first-child{font-family:var(--font);}
+.mn{font-weight:700;font-size:13px;color:var(--text);}
+.mb2{font-size:11px;color:var(--muted);margin-top:1px;}
+.sbadge{display:inline-block;padding:2px 7px;border-radius:100px;font-size:10px;font-weight:700;}
+.s-manual{background:rgba(56,217,169,.1);color:var(--accent);}
+.s-sheets{background:rgba(251,191,36,.1);color:var(--warn);}
+.row-sel td{background:rgba(56,217,169,.04)!important;}
+.row-sel td:first-child{padding-left:9px;border-left:2px solid var(--accent);}
+.model-img{width:40px;height:30px;object-fit:cover;border-radius:4px;border:1px solid var(--border);}
+.model-img-ph{width:40px;height:30px;background:var(--surface);border:1px solid var(--border);border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:14px;color:var(--muted);}
+
+/* CARD VIEW */
+.card-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;}
+.inv-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;cursor:pointer;transition:border-color var(--t);}
+.inv-card:hover{border-color:var(--border-b);}
+.inv-card.selected{border-color:var(--accent);background:rgba(56,217,169,.03);}
+.inv-card-img{height:120px;background:var(--surface);display:flex;align-items:center;justify-content:center;font-size:32px;overflow:hidden;}
+.inv-card-img img{width:100%;height:100%;object-fit:cover;}
+.inv-card-body{padding:12px;}
+.inv-card-name{font-weight:700;font-size:13px;color:var(--text);margin-bottom:2px;}
+.inv-card-sub{font-size:11px;color:var(--muted);margin-bottom:10px;}
+.inv-card-stats{display:grid;grid-template-columns:1fr 1fr;gap:5px;}
+.inv-card-stat{font-size:10px;color:var(--muted);}
+.inv-card-stat span{color:var(--dim);font-family:var(--mono);}
+.inv-card-footer{padding:8px 12px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;}
+
+/* CHIPS */
+.chips{display:flex;flex-wrap:wrap;gap:7px;min-height:32px;align-items:center;}
+.chip{display:flex;align-items:center;gap:5px;background:var(--accent-dim);border:1px solid rgba(56,217,169,.25);color:var(--accent);padding:3px 9px 3px 11px;border-radius:100px;font-size:12px;font-weight:600;}
+.chip-x{cursor:pointer;font-size:13px;opacity:.5;line-height:1;transition:opacity var(--t);}
 .chip-x:hover{opacity:1;}
-.chips-empty{font-size:13px;color:var(--text-muted);font-style:italic;}
-.cmp-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:12px;margin-bottom:20px;}
-.cmp-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:18px 16px;text-align:center;position:relative;}
-.cmp-card.best{border-color:var(--accent);box-shadow:0 0 24px rgba(56,217,169,.1);}
-.cmp-badge{position:absolute;top:-9px;left:50%;transform:translateX(-50%);background:var(--accent);color:#000;font-size:10px;font-weight:800;padding:2px 10px;border-radius:100px;letter-spacing:.04em;text-transform:uppercase;white-space:nowrap;}
-.cmp-name{font-size:14px;font-weight:800;color:var(--text);margin-bottom:2px;}
-.cmp-sub{font-size:11px;color:var(--text-muted);margin-bottom:14px;}
-.cmp-score{font-size:40px;font-weight:900;font-family:var(--font-mono);line-height:1;margin-bottom:4px;}
-.score-hi{color:var(--good);}.score-md{color:var(--warn);}.score-lo{color:var(--bad);}
-.cmp-score-lbl{font-size:10px;color:var(--text-muted);letter-spacing:.1em;text-transform:uppercase;}
-.cmp-table{width:100%;border-collapse:collapse;font-size:12px;}
-.cmp-table th{padding:10px 14px;text-align:center;font-size:11px;font-weight:700;color:var(--text-dim);background:var(--surface);border-bottom:1px solid var(--border);white-space:nowrap;}
-.cmp-table th:first-child{text-align:left;width:200px;}
-.cmp-table td{padding:9px 14px;text-align:center;border-bottom:1px solid var(--border);font-family:var(--font-mono);font-size:12px;color:var(--text-dim);}
-.cmp-table td:first-child{text-align:left;font-family:var(--font-ui);font-size:12px;font-weight:500;color:var(--text-muted);}
-.cmp-table .score-row td{background:var(--surface);font-weight:800;font-family:var(--font-mono);font-size:14px;border-bottom:none;}
-.cmp-table .score-row td:first-child{font-family:var(--font-ui);font-size:12px;font-weight:700;}
+.chips-empty{font-size:13px;color:var(--muted);font-style:italic;}
+
+/* COMPARE */
+.cmp-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:11px;margin-bottom:18px;}
+.cmp-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:16px;text-align:center;position:relative;}
+.cmp-card.best{border-color:var(--accent);box-shadow:0 0 22px rgba(56,217,169,.1);}
+.cmp-badge{position:absolute;top:-8px;left:50%;transform:translateX(-50%);background:var(--accent);color:#000;font-size:9px;font-weight:800;padding:2px 9px;border-radius:100px;text-transform:uppercase;white-space:nowrap;}
+.cmp-name{font-size:13px;font-weight:800;color:var(--text);margin-bottom:2px;}
+.cmp-sub{font-size:11px;color:var(--muted);margin-bottom:12px;}
+.cmp-score{font-size:38px;font-weight:900;font-family:var(--mono);line-height:1;margin-bottom:3px;}
+.s-hi{color:var(--good);}.s-md{color:var(--warn);}.s-lo{color:var(--bad);}
+.cmp-lbl{font-size:9px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;}
+.cmp-tbl{width:100%;border-collapse:collapse;font-size:12px;}
+.cmp-tbl th{padding:9px 13px;text-align:center;font-size:10px;font-weight:700;color:var(--dim);background:var(--surface);border-bottom:1px solid var(--border);white-space:nowrap;}
+.cmp-tbl th:first-child{text-align:left;width:200px;}
+.cmp-tbl td{padding:8px 13px;text-align:center;border-bottom:1px solid var(--border);font-family:var(--mono);font-size:12px;color:var(--dim);}
+.cmp-tbl td:first-child{text-align:left;font-family:var(--font);font-size:12px;font-weight:500;color:var(--muted);}
+.cmp-tbl .srow td{background:var(--surface);font-weight:800;font-family:var(--mono);font-size:13px;border-bottom:none;}
+.cmp-tbl .srow td:first-child{font-family:var(--font);font-size:12px;}
 .c-best{color:var(--good)!important;font-weight:700;}.c-worst{color:var(--bad)!important;}
-.analysis-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px;margin-top:14px;}
-.analysis-item{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:13px 15px;display:flex;align-items:center;gap:12px;}
-.analysis-icon{font-size:18px;flex-shrink:0;}
-.analysis-var{font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:2px;}
-.analysis-winner{font-size:14px;font-weight:700;color:var(--text);}
-.analysis-val{font-size:11px;color:var(--text-muted);font-family:var(--font-mono);margin-top:1px;}
-.notice{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:var(--radius-sm);padding:11px 14px;font-size:12px;color:var(--text-dim);margin-bottom:14px;line-height:1.6;}
-.notice.warn{border-left-color:var(--warn);}.notice.error{border-left-color:var(--bad);}.notice.success{border-left-color:var(--good);}
-.itabs{display:flex;gap:2px;margin-bottom:16px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:3px;width:fit-content;}
-.itab{padding:6px 14px;font-size:12px;color:var(--text-muted);cursor:pointer;border-radius:4px;transition:all var(--transition);font-weight:500;}
-.itab.active{background:var(--card);color:var(--text);}
-.code-block{background:#040410;border:1px solid var(--border);border-radius:var(--radius-sm);padding:16px;font-family:var(--font-mono);font-size:11px;color:#7dcfff;overflow-x:auto;white-space:pre;max-height:320px;overflow-y:auto;line-height:1.65;}
-.status-dot{width:7px;height:7px;border-radius:50%;display:inline-block;flex-shrink:0;}
-.dot-on{background:var(--good);box-shadow:0 0 6px var(--good);}.dot-off{background:var(--text-muted);}
-.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);backdrop-filter:blur(4px);z-index:100;align-items:center;justify-content:center;padding:16px;}
-.modal-overlay.open{display:flex;}
-.modal{background:var(--card);border:1px solid var(--border-bright);border-radius:12px;padding:28px;width:100%;max-width:540px;max-height:88vh;overflow-y:auto;}
-.modal-title{font-size:18px;font-weight:800;color:var(--text);margin-bottom:5px;letter-spacing:-.02em;}
-.modal-sub{font-size:13px;color:var(--text-muted);margin-bottom:22px;}
-.modal-footer{display:flex;justify-content:flex-end;gap:8px;margin-top:22px;padding-top:16px;border-top:1px solid var(--border);}
-.toast-wrap{position:fixed;bottom:22px;right:22px;z-index:200;display:flex;flex-direction:column;gap:7px;pointer-events:none;}
-.toast{background:var(--card);border:1px solid var(--border-bright);border-radius:var(--radius);padding:11px 15px;font-size:13px;color:var(--text);display:flex;align-items:center;gap:9px;max-width:300px;animation:toastIn .2s ease;}
-.toast.t-success{border-left:3px solid var(--good);}.toast.t-error{border-left:3px solid var(--bad);}.toast.t-info{border-left:3px solid var(--accent);}
-@keyframes toastIn{from{transform:translateX(16px);opacity:0;}to{transform:translateX(0);opacity:1;}}
-.empty{text-align:center;padding:48px 24px;color:var(--text-muted);}
-.empty-icon{font-size:30px;margin-bottom:12px;}
-.empty-title{font-size:14px;font-weight:700;color:var(--text-dim);margin-bottom:5px;}
+.an-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:9px;margin-top:12px;}
+.an-item{background:var(--surface);border:1px solid var(--border);border-radius:var(--rs);padding:12px 14px;display:flex;align-items:center;gap:11px;}
+.an-icon{font-size:17px;flex-shrink:0;}
+.an-var{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:2px;}
+.an-win{font-size:13px;font-weight:700;color:var(--text);}
+.an-val{font-size:11px;color:var(--muted);font-family:var(--mono);margin-top:1px;}
+
+/* BAR CHART */
+.chart-wrap{padding:4px 0;}
+.bar-row{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
+.bar-label{font-size:12px;color:var(--dim);width:140px;flex-shrink:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:600;}
+.bar-track{flex:1;background:var(--surface);border-radius:100px;height:10px;overflow:hidden;border:1px solid var(--border);}
+.bar-fill{height:100%;border-radius:100px;transition:width .6s ease;}
+.bar-val{font-size:11px;font-family:var(--mono);color:var(--muted);width:38px;text-align:right;flex-shrink:0;}
+
+/* HISTORY */
+.hist-item{background:var(--surface);border:1px solid var(--border);border-radius:var(--rs);padding:12px 14px;display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;cursor:pointer;transition:border-color var(--t);}
+.hist-item:hover{border-color:var(--border-b);}
+.hist-name{font-size:13px;font-weight:600;color:var(--text);}
+.hist-meta{font-size:11px;color:var(--muted);margin-top:2px;}
+
+/* INNER TABS */
+.itabs{display:flex;gap:2px;margin-bottom:14px;background:var(--surface);border:1px solid var(--border);border-radius:var(--rs);padding:3px;width:fit-content;}
+.itab{padding:5px 13px;font-size:12px;color:var(--muted);cursor:pointer;border-radius:4px;transition:all var(--t);font-weight:500;}
+.itab.on{background:var(--card);color:var(--text);}
+
+/* CODE */
+.code-block{background:#040410;border:1px solid var(--border);border-radius:var(--rs);padding:14px;font-family:var(--mono);font-size:11px;color:#7dcfff;overflow-x:auto;white-space:pre;max-height:300px;overflow-y:auto;line-height:1.6;}
+
+/* STATUS */
+.sdot{width:7px;height:7px;border-radius:50%;display:inline-block;flex-shrink:0;}
+.dot-on{background:var(--good);box-shadow:0 0 6px var(--good);}.dot-off{background:var(--muted);}
+
+/* MODAL */
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);backdrop-filter:blur(4px);z-index:100;align-items:center;justify-content:center;padding:16px;}
+.overlay.open{display:flex;}
+.modal{background:var(--card);border:1px solid var(--border-b);border-radius:12px;padding:26px;width:100%;max-width:560px;max-height:88vh;overflow-y:auto;}
+.modal-title{font-size:17px;font-weight:800;color:var(--text);margin-bottom:4px;letter-spacing:-.02em;}
+.modal-sub{font-size:13px;color:var(--muted);margin-bottom:20px;}
+.modal-foot{display:flex;justify-content:flex-end;gap:8px;margin-top:20px;padding-top:14px;border-top:1px solid var(--border);}
+
+/* TOAST */
+.toast-wrap{position:fixed;bottom:20px;right:20px;z-index:200;display:flex;flex-direction:column;gap:6px;pointer-events:none;}
+.toast{background:var(--card);border:1px solid var(--border-b);border-radius:var(--r);padding:10px 14px;font-size:13px;color:var(--text);display:flex;align-items:center;gap:8px;max-width:300px;animation:toastIn .2s ease;}
+.toast.tok{border-left:3px solid var(--good);}.toast.terr{border-left:3px solid var(--bad);}.toast.tinf{border-left:3px solid var(--accent);}
+@keyframes toastIn{from{transform:translateX(14px);opacity:0;}to{transform:translateX(0);opacity:1;}}
+
+/* EMPTY */
+.empty{text-align:center;padding:44px 24px;color:var(--muted);}
+.empty-icon{font-size:28px;margin-bottom:10px;}
+.empty-title{font-size:14px;font-weight:700;color:var(--dim);margin-bottom:4px;}
 .empty-text{font-size:12px;}
-.tag{display:inline-block;padding:2px 8px;border-radius:4px;font-family:var(--font-mono);font-size:10px;font-weight:600;}
-.tag-accent{background:var(--accent-dim);color:var(--accent);}
-.tag-warn{background:rgba(251,191,36,.1);color:var(--warn);}
-.flex{display:flex;}.flex-center{display:flex;align-items:center;}.flex-between{display:flex;align-items:center;justify-content:space-between;}
-.gap-8{gap:8px;}.gap-12{gap:12px;}.mt-8{margin-top:8px;}.mt-14{margin-top:14px;}.mb-14{margin-bottom:14px;}.mb-18{margin-bottom:18px;}
+
+/* TAG */
+.tag{display:inline-block;padding:2px 7px;border-radius:4px;font-family:var(--mono);font-size:10px;font-weight:600;}
+.ta{background:var(--accent-dim);color:var(--accent);}.tw{background:rgba(251,191,36,.1);color:var(--warn);}
+
+/* SYNC */
+.sync-info{display:flex;align-items:center;gap:8px;font-size:11px;color:var(--muted);}
+.sync-select{background:var(--surface);border:1px solid var(--border-b);border-radius:var(--rs);color:var(--text);padding:4px 8px;font-size:11px;font-family:var(--font);outline:none;}
+
 /* CHAT */
-.chat-outer{display:flex;flex-direction:column;height:calc(100vh - 130px);}
-.chat-messages{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:14px;padding:4px 0 16px;}
-.chat-msg{display:flex;gap:10px;align-items:flex-start;}
-.chat-msg.user{flex-direction:row-reverse;}
-.chat-avatar{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;font-weight:700;}
-.chat-avatar.ai{background:var(--accent-dim);border:1px solid rgba(56,217,169,.25);color:var(--accent);}
-.chat-avatar.user{background:rgba(148,163,184,.08);border:1px solid var(--border-bright);color:var(--text-muted);}
-.chat-bubble{max-width:82%;padding:11px 14px;border-radius:10px;font-size:13px;line-height:1.65;}
-.chat-msg.ai .chat-bubble{background:var(--surface);border:1px solid var(--border);color:var(--text-dim);}
-.chat-msg.user .chat-bubble{background:var(--accent-dim);border:1px solid rgba(56,217,169,.2);color:var(--text);}
-.chat-bubble strong{color:var(--text);}
-.chat-input-row{display:flex;gap:10px;padding-top:14px;border-top:1px solid var(--border);flex-shrink:0;}
-.chat-textarea{flex:1;background:var(--surface);border:1px solid var(--border-bright);border-radius:var(--radius);color:var(--text);padding:10px 14px;font-size:13px;font-family:var(--font-ui);outline:none;transition:border-color var(--transition);resize:none;min-height:42px;max-height:120px;line-height:1.5;}
-.chat-textarea:focus{border-color:var(--accent);}
-.chat-textarea::placeholder{color:var(--text-muted);}
-.typing-wrap{display:flex;align-items:center;gap:5px;padding:10px 14px;}
-.typing-dot{width:5px;height:5px;border-radius:50%;background:var(--accent);animation:typingPulse 1.2s ease infinite;}
-.typing-dot:nth-child(2){animation-delay:.2s;}.typing-dot:nth-child(3){animation-delay:.4s;}
-@keyframes typingPulse{0%,100%{opacity:.25;}50%{opacity:1;}}
-.quick-btns{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px;}
-.quick-btn{background:var(--surface);border:1px solid var(--border-bright);color:var(--text-muted);padding:5px 11px;border-radius:100px;font-size:11px;cursor:pointer;transition:all var(--transition);font-family:var(--font-ui);}
-.quick-btn:hover{border-color:var(--accent);color:var(--accent);}
-.api-setup-box{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:22px;margin-bottom:16px;}
-.api-setup-title{font-size:14px;font-weight:700;color:var(--text);margin-bottom:8px;}
-.api-setup-sub{font-size:12px;color:var(--text-muted);margin-bottom:16px;line-height:1.7;}
+.chat-outer{display:flex;flex-direction:column;height:calc(100vh - 180px);min-height:400px;}
+.chat-msgs{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:12px;padding:4px 0 14px;}
+.cmsg{display:flex;gap:9px;align-items:flex-start;}
+.cmsg.user{flex-direction:row-reverse;}
+.cav{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;font-weight:700;}
+.cav.ai{background:var(--accent-dim);border:1px solid rgba(56,217,169,.25);color:var(--accent);}
+.cav.user{background:rgba(148,163,184,.08);border:1px solid var(--border-b);color:var(--muted);}
+.cbub{max-width:82%;padding:10px 13px;border-radius:10px;font-size:13px;line-height:1.65;}
+.cmsg.ai .cbub{background:var(--surface);border:1px solid var(--border);color:var(--dim);}
+.cmsg.user .cbub{background:var(--accent-dim);border:1px solid rgba(56,217,169,.2);color:var(--text);}
+.cbub strong{color:var(--text);}
+.chat-row{display:flex;gap:9px;padding-top:12px;border-top:1px solid var(--border);flex-shrink:0;}
+.chat-ta{flex:1;background:var(--surface);border:1px solid var(--border-b);border-radius:var(--r);color:var(--text);padding:9px 13px;font-size:13px;font-family:var(--font);outline:none;transition:border-color var(--t);resize:none;min-height:40px;max-height:110px;}
+.chat-ta:focus{border-color:var(--accent);}
+.chat-ta::placeholder{color:var(--muted);}
+.typ-wrap{display:flex;align-items:center;gap:5px;padding:9px 13px;}
+.tdot{width:5px;height:5px;border-radius:50%;background:var(--accent);animation:tp 1.2s ease infinite;}
+.tdot:nth-child(2){animation-delay:.2s;}.tdot:nth-child(3){animation-delay:.4s;}
+@keyframes tp{0%,100%{opacity:.2;}50%{opacity:1;}}
+.qbtns{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px;}
+.qbtn{background:var(--surface);border:1px solid var(--border-b);color:var(--muted);padding:4px 10px;border-radius:100px;font-size:11px;cursor:pointer;transition:all var(--t);font-family:var(--font);}
+.qbtn:hover{border-color:var(--accent);color:var(--accent);}
+.api-box{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:20px;margin-bottom:14px;}
+
+/* PRINT */
+@media print {
+  .hdr,.ntab,.btn,.btn-out,.btn-ghost,.btn-icon,.btn-sm,.btn-danger,.overlay,.toast-wrap{display:none!important;}
+  .body{padding:0!important;}
+  .card{break-inside:avoid;}
+  * {color:#000!important;background:#fff!important;border-color:#ccc!important;}
+}
+
+/* UTIL */
+.flex{display:flex;}.fca{display:flex;align-items:center;}.fcb{display:flex;align-items:center;justify-content:space-between;}
+.g8{gap:8px;}.g12{gap:12px;}.mt8{margin-top:8px;}.mt14{margin-top:14px;}.mb14{margin-bottom:14px;}.mb18{margin-bottom:18px;}
+
 ::-webkit-scrollbar{width:5px;height:5px;}
 ::-webkit-scrollbar-track{background:transparent;}
-::-webkit-scrollbar-thumb{background:var(--border-bright);border-radius:3px;}
+::-webkit-scrollbar-thumb{background:var(--border-b);border-radius:3px;}
 </style>
 </head>
 <body>
 
 <div class="toast-wrap" id="toasts"></div>
 
-<!-- MODAL: Agregar Modelo -->
-<div class="modal-overlay" id="modalAddModel">
+<!-- MODAL: Agregar / Editar Modelo -->
+<div class="overlay" id="mModel">
   <div class="modal">
-    <div class="modal-title">Agregar modelo</div>
+    <div class="modal-title" id="mModel-title">Agregar modelo</div>
     <div class="modal-sub">Completá los datos del vehículo</div>
-    <div class="form-row">
-      <div class="form-group"><label class="form-label">Marca *</label><input type="text" class="form-input" id="f-marca" placeholder="Toyota" autocomplete="off"></div>
-      <div class="form-group"><label class="form-label">Modelo *</label><input type="text" class="form-input" id="f-modelo" placeholder="Corolla" autocomplete="off"></div>
+    <div class="fr">
+      <div class="fg"><label class="fl">Marca *</label><input type="text" class="fi" id="f-marca" placeholder="Toyota" autocomplete="off"></div>
+      <div class="fg"><label class="fl">Modelo *</label><input type="text" class="fi" id="f-modelo" placeholder="Corolla" autocomplete="off"></div>
     </div>
-    <div class="form-row">
-      <div class="form-group"><label class="form-label">Año *</label><input type="number" class="form-input" id="f-anio" placeholder="2024" min="1990" max="2030" autocomplete="off"></div>
-      <div class="form-group"><label class="form-label">Segmento</label>
-        <select class="form-select" id="f-segmento">
-          <option value="">Seleccionar...</option>
-          <option>Sedán</option><option>SUV</option><option>Pickup</option><option>Hatchback</option><option>Coupé</option><option>Utilitario</option><option>Minivan</option>
-        </select>
+    <div class="fr">
+      <div class="fg"><label class="fl">Año *</label><input type="number" class="fi" id="f-anio" placeholder="2024" min="1990" max="2030"></div>
+      <div class="fg"><label class="fl">Segmento</label>
+        <select class="fs" id="f-seg"><option value="">—</option><option>Sedán</option><option>SUV</option><option>Pickup</option><option>Hatchback</option><option>Coupé</option><option>Utilitario</option><option>Minivan</option></select>
       </div>
     </div>
-    <div class="form-row">
-      <div class="form-group"><label class="form-label">Precio USD *</label><input type="number" class="form-input" id="f-precio" placeholder="25000" min="0" autocomplete="off"></div>
-      <div class="form-group"><label class="form-label">Depreciación %/año *</label><input type="number" class="form-input" id="f-depreciacion" placeholder="12" step="0.1" min="0" autocomplete="off"></div>
+    <div class="fr">
+      <div class="fg"><label class="fl">Precio USD *</label><input type="number" class="fi" id="f-precio" placeholder="25000" min="0"></div>
+      <div class="fg"><label class="fl">Depreciación %/año *</label><input type="number" class="fi" id="f-dep" placeholder="12" step="0.1" min="0"></div>
     </div>
-    <div class="form-row">
-      <div class="form-group"><label class="form-label">Patente USD/año *</label><input type="number" class="form-input" id="f-patente" placeholder="800" min="0" autocomplete="off"></div>
-      <div class="form-group"><label class="form-label">Consumo L/100km *</label><input type="number" class="form-input" id="f-consumo" placeholder="7.5" step="0.1" min="0" autocomplete="off"></div>
+    <div class="fr">
+      <div class="fg"><label class="fl">Patente USD/año *</label><input type="number" class="fi" id="f-pat" placeholder="800" min="0"></div>
+      <div class="fg"><label class="fl">Consumo L/100km *</label><input type="number" class="fi" id="f-con" placeholder="7.5" step="0.1" min="0"></div>
     </div>
-    <div class="form-row">
-      <div class="form-group"><label class="form-label">Reventa (1–5) *</label>
-        <select class="form-select" id="f-reventa">
-          <option value="">—</option><option value="1">1 — Muy baja</option><option value="2">2 — Baja</option><option value="3">3 — Media</option><option value="4">4 — Alta</option><option value="5">5 — Muy alta</option>
-        </select>
+    <div class="fr">
+      <div class="fg"><label class="fl">Reventa (1–5) *</label>
+        <select class="fs" id="f-rev"><option value="">—</option><option value="1">1 — Muy baja</option><option value="2">2 — Baja</option><option value="3">3 — Media</option><option value="4">4 — Alta</option><option value="5">5 — Muy alta</option></select>
       </div>
-      <div class="form-group"><label class="form-label">Equipamiento (1–5) *</label>
-        <select class="form-select" id="f-equipamiento">
-          <option value="">—</option><option value="1">1 — Básico</option><option value="2">2 — Estándar</option><option value="3">3 — Completo</option><option value="4">4 — Premium</option><option value="5">5 — Full</option>
-        </select>
+      <div class="fg"><label class="fl">Equipamiento (1–5) *</label>
+        <select class="fs" id="f-equ"><option value="">—</option><option value="1">1 — Básico</option><option value="2">2 — Estándar</option><option value="3">3 — Completo</option><option value="4">4 — Premium</option><option value="5">5 — Full</option></select>
       </div>
     </div>
-    <div id="modal-model-error" class="notice error" style="display:none;margin-top:8px;"></div>
-    <div class="modal-footer">
-      <button class="btn-ghost" onclick="closeModal('modalAddModel')">Cancelar</button>
-      <button class="btn-primary btn-sm" onclick="saveModel()">Guardar modelo</button>
+    <div class="fg"><label class="fl">Foto URL (opcional)</label><input type="url" class="fi" id="f-img" placeholder="https://...imagen.jpg"></div>
+    <div id="mModel-err" class="notice err" style="display:none;margin-top:6px;"></div>
+    <div class="modal-foot">
+      <button class="btn-ghost" onclick="closeOverlay('mModel')">Cancelar</button>
+      <button class="btn btn-sm" onclick="saveModel()">Guardar</button>
     </div>
   </div>
 </div>
 
 <!-- MODAL: Apps Script -->
-<div class="modal-overlay" id="modalScript">
+<div class="overlay" id="mScript">
   <div class="modal">
     <div class="modal-title">Código Apps Script</div>
-    <div class="modal-sub">Pegá este código en tu proyecto de Google Apps Script y publicalo como Web App</div>
-    <div class="code-block" id="scriptCodeDisplay"></div>
-    <div class="modal-footer">
-      <button class="btn-ghost" onclick="closeModal('modalScript')">Cerrar</button>
-      <button class="btn-primary btn-sm" onclick="copyScriptCode()">Copiar código</button>
+    <div class="modal-sub">Pegá este código en tu proyecto de Apps Script y publicalo como Web App</div>
+    <div class="code-block" id="scriptCode"></div>
+    <div class="modal-foot">
+      <button class="btn-ghost" onclick="closeOverlay('mScript')">Cerrar</button>
+      <button class="btn btn-sm" onclick="copyScript()">Copiar código</button>
     </div>
   </div>
 </div>
 
-<!-- SCREEN: WELCOME -->
-<div class="screen active" id="welcome">
-  <div class="welcome-label">AutoDesk Pro · B2B Concesionarias</div>
-  <h1 class="welcome-title">Gestión de<br><span>Concesionarias</span></h1>
-  <p class="welcome-sub">Inventario · Google Sheets · Comparación · Asesor IA</p>
-  <button class="btn-primary" onclick="goToSetup()">Configurar mi concesionaria</button>
+<!-- MODAL: Historial comparación -->
+<div class="overlay" id="mHist">
+  <div class="modal" style="max-width:680px;">
+    <div class="modal-title">Historial de comparaciones</div>
+    <div class="modal-sub">Comparaciones guardadas anteriormente</div>
+    <div id="hist-list"></div>
+    <div class="modal-foot"><button class="btn-ghost" onclick="closeOverlay('mHist')">Cerrar</button></div>
+  </div>
 </div>
 
-<!-- SCREEN: SETUP -->
+<!-- WELCOME -->
+<div class="screen active" id="welcome">
+  <div class="w-label">AutoDesk Pro · B2B Concesionarias</div>
+  <h1 class="w-title">Gestión de<br><span>Concesionarias</span></h1>
+  <p class="w-sub">Inventario · Google Sheets · Comparación · Asesor IA</p>
+  <button class="btn" onclick="goSetup()">Configurar mi concesionaria</button>
+</div>
+
+<!-- SETUP -->
 <div class="screen" id="setup" style="flex-direction:column;align-items:center;justify-content:center;background:var(--bg);padding:24px;">
   <div class="setup-card">
     <div class="setup-back" onclick="goBack()">← Volver</div>
     <div class="setup-title">Configuración inicial</div>
-    <div class="setup-sub">Ingresá los datos de tu concesionaria para comenzar</div>
-    <div class="form-group"><label class="form-label">Nombre de la concesionaria *</label><input type="text" class="form-input" id="s-nombre" placeholder="Ej: Automotores del Sur" autocomplete="off"></div>
-    <div class="form-row">
-      <div class="form-group"><label class="form-label">Tipo *</label>
-        <select class="form-select" id="s-tipo">
-          <option value="">—</option><option>Oficial</option><option>Multimarca</option><option>Usados</option><option>Premium</option><option>Importados</option>
-        </select>
+    <div class="setup-sub">Ingresá los datos de tu concesionaria</div>
+    <div class="fg"><label class="fl">Nombre *</label><input type="text" class="fi" id="s-nom" placeholder="Automotores del Sur" autocomplete="off"></div>
+    <div class="fr">
+      <div class="fg"><label class="fl">Tipo *</label>
+        <select class="fs" id="s-tipo"><option value="">—</option><option>Oficial</option><option>Multimarca</option><option>Usados</option><option>Premium</option><option>Importados</option></select>
       </div>
-      <div class="form-group"><label class="form-label">Zona *</label><input type="text" class="form-input" id="s-zona" placeholder="Ej: Montevideo" autocomplete="off"></div>
+      <div class="fg"><label class="fl">Zona *</label><input type="text" class="fi" id="s-zona" placeholder="Montevideo" autocomplete="off"></div>
     </div>
-    <div class="form-group"><label class="form-label">Especialidad *</label>
-      <select class="form-select" id="s-especialidad">
+    <div class="fg"><label class="fl">Especialidad *</label>
+      <select class="fs" id="s-esp">
         <option value="">—</option><option>Vehículos compactos</option><option>SUV y crossovers</option><option>Pickups y utilitarios</option><option>Vehículos de lujo</option><option>Autos deportivos</option><option>Vehículos híbridos y eléctricos</option><option>Familia completa</option>
       </select>
     </div>
-    <div id="setup-error" class="notice error" style="display:none;"></div>
-    <div style="margin-top:22px;"><button class="btn-primary" style="width:100%;" onclick="saveCompany()">Guardar y comenzar →</button></div>
+    <div id="setup-err" class="notice err" style="display:none;"></div>
+    <div style="margin-top:20px;"><button class="btn" style="width:100%;" onclick="saveCompany()">Guardar y comenzar →</button></div>
   </div>
 </div>
 
-<!-- SCREEN: DASHBOARD -->
+<!-- DASHBOARD -->
 <div class="screen" id="dashboard">
-  <div class="dash-header">
-    <div class="dash-logo">AUTODESK</div>
-    <div class="dash-company-name" id="hdr-company">—</div>
-    <nav class="dash-nav">
-      <div class="nav-tab active" data-tab="empresa" onclick="switchTab('empresa')">Mi Empresa</div>
-      <div class="nav-tab" data-tab="inventario" onclick="switchTab('inventario')">Inventario</div>
-      <div class="nav-tab" data-tab="sheets" onclick="switchTab('sheets')">Google Sheets</div>
-      <div class="nav-tab" data-tab="seleccion" onclick="switchTab('seleccion')">Selección</div>
-      <div class="nav-tab" data-tab="comparacion" onclick="switchTab('comparacion')">Comparación</div>
-      <div class="nav-tab" data-tab="chat" onclick="switchTab('chat')">✦ Asesor IA</div>
+  <div class="hdr">
+    <div class="hdr-logo">AUTODESK</div>
+    <div class="hdr-co" id="hdr-co">—</div>
+    <nav class="hdr-nav">
+      <div class="ntab on" data-tab="empresa" onclick="switchTab('empresa')">Mi Empresa</div>
+      <div class="ntab" data-tab="inventario" onclick="switchTab('inventario')">Inventario</div>
+      <div class="ntab" data-tab="sheets" onclick="switchTab('sheets')">Google Sheets</div>
+      <div class="ntab" data-tab="seleccion" onclick="switchTab('seleccion')">Selección</div>
+      <div class="ntab" data-tab="comparacion" onclick="switchTab('comparacion')">Comparación</div>
+      <div class="ntab" data-tab="chat" onclick="switchTab('chat')">✦ Asesor IA</div>
     </nav>
-    <button class="btn-ghost" onclick="resetApp()" style="flex-shrink:0;font-size:11px;">Resetear</button>
+    <div class="hdr-right">
+      <button class="theme-btn" onclick="toggleTheme()" title="Cambiar tema" id="theme-btn">🌙</button>
+      <button class="btn-ghost" onclick="resetApp()" style="font-size:11px;">Resetear</button>
+    </div>
   </div>
 
-  <div class="dash-body">
+  <div class="body">
 
-    <!-- Mi Empresa -->
-    <div class="panel active" id="panel-empresa">
+    <!-- EMPRESA -->
+    <div class="panel on" id="panel-empresa">
       <div class="card">
-        <div class="card-header"><div class="card-title">Datos de la concesionaria</div><button class="btn-secondary btn-sm" onclick="goToSetup()">Editar</button></div>
-        <div class="info-grid" id="company-fields"></div>
+        <div class="ch"><div class="ct">Datos de la concesionaria</div><button class="btn-out btn-sm" onclick="goSetup()">Editar</button></div>
+        <div class="igrid" id="co-fields"></div>
       </div>
       <div class="card">
-        <div class="card-header"><div class="card-title">Estadísticas del inventario</div></div>
-        <div class="info-grid" id="company-stats"></div>
+        <div class="ch"><div class="ct">Estadísticas del inventario</div></div>
+        <div class="igrid" id="co-stats"></div>
       </div>
     </div>
 
-    <!-- Inventario -->
+    <!-- INVENTARIO -->
     <div class="panel" id="panel-inventario">
-      <div class="flex-between mb-18">
+      <div class="fcb mb18">
         <div>
-          <div style="font-size:20px;font-weight:800;color:var(--text);letter-spacing:-.02em;">Inventario</div>
-          <div style="font-size:12px;color:var(--text-muted);margin-top:2px;" id="inv-count">0 modelos cargados</div>
+          <div style="font-size:19px;font-weight:800;color:var(--text);letter-spacing:-.02em;">Inventario</div>
+          <div style="font-size:12px;color:var(--muted);margin-top:2px;" id="inv-count">0 modelos</div>
         </div>
-        <div class="flex gap-8">
-          <button class="btn-secondary btn-sm" onclick="selectAll()">Seleccionar todos</button>
-          <button class="btn-primary btn-sm" onclick="openModal('modalAddModel')">+ Agregar modelo</button>
+        <div class="flex g8">
+          <button class="btn-out btn-sm" onclick="toggleView()" id="view-btn">Vista tarjetas</button>
+          <button class="btn-out btn-sm" onclick="exportCSV()">Exportar CSV</button>
+          <button class="btn-out btn-sm" onclick="selectAll()">Seleccionar todos</button>
+          <button class="btn btn-sm" onclick="openAdd()">+ Agregar</button>
         </div>
       </div>
-      <div class="card" style="padding:0;overflow:hidden;"><div id="inv-content"></div></div>
+      <div class="filters">
+        <input type="text" class="fi-sm" id="f-search" placeholder="Buscar modelo..." oninput="renderInv()" style="width:160px;">
+        <select class="fi-sm" id="f-brand" onchange="renderInv()"><option value="">Todas las marcas</option></select>
+        <select class="fi-sm" id="f-segment" onchange="renderInv()"><option value="">Todos los segmentos</option></select>
+        <input type="number" class="fi-sm" id="f-pmin" placeholder="Precio mín" oninput="renderInv()" style="width:110px;">
+        <input type="number" class="fi-sm" id="f-pmax" placeholder="Precio máx" oninput="renderInv()" style="width:110px;">
+        <button class="btn-ghost" onclick="clearFilters()" style="font-size:11px;">Limpiar filtros</button>
+      </div>
+      <div id="inv-content"></div>
     </div>
 
-    <!-- Google Sheets -->
+    <!-- SHEETS -->
     <div class="panel" id="panel-sheets">
       <div class="card">
-        <div class="card-header">
-          <div class="card-title">Conexión con Google Sheets</div>
-          <div class="flex-center gap-8">
-            <span class="status-dot dot-off" id="sheets-dot"></span>
-            <span style="font-size:11px;color:var(--text-muted);" id="sheets-status">Sin configurar</span>
+        <div class="ch">
+          <div class="ct">Conexión con Google Sheets</div>
+          <div class="fca g8">
+            <span class="sdot dot-off" id="sh-dot"></span>
+            <span style="font-size:11px;color:var(--muted);" id="sh-status">Sin configurar</span>
           </div>
         </div>
         <div class="itabs">
-          <div class="itab active" id="itab-csv" onclick="switchSheetsMode('csv')">CSV Público</div>
-          <div class="itab" id="itab-script" onclick="switchSheetsMode('script')">Apps Script</div>
+          <div class="itab on" id="itab-csv" onclick="shMode('csv')">CSV Público</div>
+          <div class="itab" id="itab-as" onclick="shMode('script')">Apps Script</div>
         </div>
-        <div id="sheets-csv-panel">
-          <div class="notice">En Google Sheets: <strong>Archivo → Publicar en la web → Formato CSV</strong>. Copiá la URL y pegala acá.</div>
-          <div class="form-group"><label class="form-label">URL del CSV público</label><input type="url" class="form-input" id="csv-url" placeholder="https://docs.google.com/spreadsheets/d/.../pub?output=csv"></div>
-          <div class="flex gap-8 mt-8">
-            <button class="btn-primary btn-sm" onclick="syncCSV()">Sincronizar</button>
-            <button class="btn-secondary btn-sm" onclick="setVal('csv-url','')">Limpiar</button>
+        <div id="sh-csv">
+          <div class="notice">En Google Sheets: <strong>Archivo → Publicar en la web → CSV</strong>. Copiá la URL y pegala acá.</div>
+          <div class="fg"><label class="fl">URL del CSV público</label><input type="url" class="fi" id="csv-url" placeholder="https://docs.google.com/spreadsheets/d/.../pub?output=csv"></div>
+          <div class="flex g8 mt8">
+            <button class="btn btn-sm" onclick="syncCSV()">Sincronizar ahora</button>
+            <button class="btn-out btn-sm" onclick="setVal('csv-url','')">Limpiar</button>
           </div>
-          <div id="csv-feedback" class="mt-14"></div>
+          <div id="csv-fb" class="mt14"></div>
         </div>
-        <div id="sheets-script-panel" style="display:none;">
-          <div class="notice">Apps Script permite <strong>lectura y escritura</strong> bidireccional. Creá un proyecto en <strong>script.google.com</strong>, pegá el código y publicalo como Web App.</div>
-          <div class="mb-14"><button class="btn-secondary btn-sm" onclick="showScriptCode()">Ver código Apps Script</button></div>
-          <div class="form-group"><label class="form-label">URL del Web App</label><input type="url" class="form-input" id="script-url" placeholder="https://script.google.com/macros/s/.../exec"></div>
-          <div class="flex gap-8 mt-8">
-            <button class="btn-primary btn-sm" onclick="syncScript()">Traer datos (GET)</button>
-            <button class="btn-secondary btn-sm" onclick="setVal('script-url','')">Limpiar</button>
+        <div id="sh-as" style="display:none;">
+          <div class="notice">Apps Script permite <strong>lectura y escritura</strong>. Creá un proyecto en <strong>script.google.com</strong>, pegá el código y publicalo como Web App.</div>
+          <div class="mb14"><button class="btn-out btn-sm" onclick="showScript()">Ver código Apps Script</button></div>
+          <div class="fg"><label class="fl">URL del Web App</label><input type="url" class="fi" id="as-url" placeholder="https://script.google.com/macros/s/.../exec"></div>
+          <div class="flex g8 mt8">
+            <button class="btn btn-sm" onclick="syncScript()">Traer datos (GET)</button>
+            <button class="btn-out btn-sm" onclick="setVal('as-url','')">Limpiar</button>
           </div>
-          <div id="script-feedback" class="mt-14"></div>
+          <div id="as-fb" class="mt14"></div>
         </div>
       </div>
       <div class="card">
-        <div class="card-header"><div class="card-title">Columnas esperadas en la hoja</div></div>
-        <div style="display:flex;flex-wrap:wrap;gap:7px;">
-          <span class="tag tag-accent">marca</span><span class="tag tag-accent">modelo</span><span class="tag tag-accent">anio</span>
-          <span class="tag tag-accent">precio</span><span class="tag tag-accent">depreciacion</span><span class="tag tag-accent">patente</span>
-          <span class="tag tag-accent">consumo</span><span class="tag tag-accent">reventa</span><span class="tag tag-accent">equipamiento</span>
-          <span class="tag tag-warn">segmento (opcional)</span>
+        <div class="ch">
+          <div class="ct">Auto-sincronización</div>
+          <div class="sync-info">
+            <span id="last-sync-lbl">Nunca sincronizado</span>
+            <select class="sync-select" id="sync-interval" onchange="setSyncInterval()">
+              <option value="0">Desactivada</option>
+              <option value="1">Cada 1 min</option>
+              <option value="5">Cada 5 min</option>
+              <option value="15">Cada 15 min</option>
+              <option value="30">Cada 30 min</option>
+            </select>
+          </div>
         </div>
-        <div class="notice mt-14" style="margin-bottom:0;"><strong>reventa</strong> y <strong>equipamiento</strong> deben ser números del 1 al 5. La primera fila debe ser el encabezado.</div>
+        <div class="notice" style="margin-bottom:0;">La auto-sincronización trae datos desde Google Sheets automáticamente sin que tengas que hacer clic.</div>
+      </div>
+      <div class="card">
+        <div class="ch"><div class="ct">Columnas esperadas</div></div>
+        <div style="display:flex;flex-wrap:wrap;gap:6px;">
+          <span class="tag ta">marca</span><span class="tag ta">modelo</span><span class="tag ta">anio</span>
+          <span class="tag ta">precio</span><span class="tag ta">depreciacion</span><span class="tag ta">patente</span>
+          <span class="tag ta">consumo</span><span class="tag ta">reventa</span><span class="tag ta">equipamiento</span>
+          <span class="tag tw">segmento (opc)</span><span class="tag tw">imagen (opc)</span>
+        </div>
+        <div class="notice mt14" style="margin-bottom:0;"><strong>reventa</strong> y <strong>equipamiento</strong> deben ser del 1 al 5.</div>
       </div>
     </div>
 
-    <!-- Selección -->
+    <!-- SELECCIÓN -->
     <div class="panel" id="panel-seleccion">
       <div class="card">
-        <div class="card-header">
-          <div class="card-title">Modelos seleccionados</div>
-          <div class="flex gap-8">
-            <button class="btn-ghost" onclick="clearSelection()">Limpiar</button>
-            <button class="btn-primary btn-sm" onclick="goCompare()">Comparar seleccionados →</button>
+        <div class="ch">
+          <div class="ct">Modelos seleccionados</div>
+          <div class="flex g8">
+            <button class="btn-ghost" onclick="clearSel()">Limpiar</button>
+            <button class="btn btn-sm" onclick="goCompare()">Comparar →</button>
           </div>
         </div>
-        <div class="chips-wrap" id="chips"></div>
+        <div class="chips" id="chips"></div>
       </div>
       <div class="card" style="padding:0;overflow:hidden;">
-        <div class="card-header" style="padding:14px 18px 10px;">
-          <div class="card-title">Inventario — clic para seleccionar</div>
-          <button class="btn-secondary btn-sm" onclick="selectAll()">Todos</button>
+        <div class="ch" style="padding:13px 16px 9px;">
+          <div class="ct">Inventario — clic para seleccionar</div>
+          <button class="btn-out btn-sm" onclick="selectAll()">Todos</button>
         </div>
-        <div id="sel-inv-content"></div>
+        <div id="sel-content"></div>
       </div>
     </div>
 
-    <!-- Comparación -->
+    <!-- COMPARACIÓN -->
     <div class="panel" id="panel-comparacion">
-      <div id="cmp-output">
-        <div class="empty"><div class="empty-icon">📊</div><div class="empty-title">Sin comparación activa</div><div class="empty-text">Seleccioná al menos 2 modelos y hacé clic en «Comparar seleccionados»</div></div>
+      <div class="fcb mb14">
+        <div style="font-size:19px;font-weight:800;color:var(--text);letter-spacing:-.02em;">Comparación</div>
+        <div class="flex g8">
+          <button class="btn-out btn-sm" onclick="openOverlay('mHist')">Historial</button>
+          <button class="btn-out btn-sm" onclick="window.print()">Imprimir</button>
+        </div>
+      </div>
+      <div id="cmp-out">
+        <div class="empty"><div class="empty-icon">📊</div><div class="empty-title">Sin comparación activa</div><div class="empty-text">Seleccioná al menos 2 modelos</div></div>
       </div>
     </div>
 
-    <!-- Asesor IA -->
+    <!-- CHAT IA -->
     <div class="panel" id="panel-chat">
-      <div style="font-size:20px;font-weight:800;color:var(--text);letter-spacing:-.02em;margin-bottom:4px;">Asesor IA</div>
-      <div style="font-size:12px;color:var(--text-muted);margin-bottom:18px;">Describí lo que necesitás y la IA analiza tu inventario y te recomienda el mejor auto</div>
-
-      <div class="api-setup-box" id="api-setup-box">
-        <div class="api-setup-title">🔑 API Key de Claude (Anthropic)</div>
-        <div class="api-setup-sub">
-          Necesitás una API Key gratuita de Anthropic para activar el asesor.<br>
-          1. Andá a <strong>console.anthropic.com</strong> → API Keys → Create Key<br>
-          2. Copiá la key y pegala acá abajo<br>
-          La key se guarda solo en tu navegador, nunca se comparte con nadie.
+      <div style="font-size:19px;font-weight:800;color:var(--text);letter-spacing:-.02em;margin-bottom:4px;">Asesor IA</div>
+      <div style="font-size:12px;color:var(--muted);margin-bottom:16px;">Describí lo que necesitás y Claude analiza tu inventario</div>
+      <div class="api-box" id="api-box">
+        <div style="font-size:14px;font-weight:700;color:var(--text);margin-bottom:8px;">🔑 API Key de Claude</div>
+        <div style="font-size:12px;color:var(--muted);margin-bottom:14px;line-height:1.7;">Obtené tu key gratis en <strong>console.anthropic.com</strong> → API Keys → Create Key.<br>Se guarda solo en tu navegador.</div>
+        <div class="flex g8" style="align-items:center;">
+          <input type="password" class="fi" id="api-inp" placeholder="sk-ant-..." style="flex:1;font-family:var(--mono);font-size:12px;">
+          <button class="btn btn-sm" onclick="saveKey()">Activar</button>
         </div>
-        <div class="flex gap-8" style="align-items:center;">
-          <input type="password" class="form-input" id="api-key-input" placeholder="sk-ant-api03-..." style="flex:1;font-family:var(--font-mono);font-size:12px;">
-          <button class="btn-primary btn-sm" onclick="saveApiKey()">Activar</button>
-        </div>
-        <div id="api-key-err" style="margin-top:8px;font-size:12px;color:var(--bad);display:none;"></div>
+        <div id="api-err" style="margin-top:8px;font-size:12px;color:var(--bad);display:none;"></div>
       </div>
-
-      <div class="card" id="chat-panel-card" style="display:none;padding:16px 20px;">
-        <div class="flex-between" style="margin-bottom:14px;">
-          <div class="flex-center gap-8">
-            <span class="status-dot dot-on"></span>
-            <span style="font-size:12px;color:var(--text-muted);">Claude conectado</span>
-          </div>
-          <div class="flex gap-8">
-            <button class="btn-ghost" onclick="clearChat()" style="font-size:11px;">Limpiar chat</button>
-            <button class="btn-ghost" onclick="changeApiKey()" style="font-size:11px;">Cambiar key</button>
+      <div class="card" id="chat-card" style="display:none;padding:14px 18px;">
+        <div class="fcb" style="margin-bottom:12px;">
+          <div class="fca g8"><span class="sdot dot-on"></span><span style="font-size:12px;color:var(--muted);">Claude conectado</span></div>
+          <div class="flex g8">
+            <button class="btn-ghost" onclick="clearChat()" style="font-size:11px;">Limpiar</button>
+            <button class="btn-ghost" onclick="changeKey()" style="font-size:11px;">Cambiar key</button>
           </div>
         </div>
-        <div class="quick-btns">
-          <button class="quick-btn" onclick="quickSend('Cual es el mejor auto del inventario en relacion precio-calidad?')">Mejor precio-calidad</button>
-          <button class="quick-btn" onclick="quickSend('Que auto recomendas para una familia con presupuesto ajustado?')">Para familia y bajo presupuesto</button>
-          <button class="quick-btn" onclick="quickSend('Cual tiene el menor costo de mantenimiento a largo plazo?')">Menor costo a largo plazo</button>
-          <button class="quick-btn" onclick="quickSend('Comparame los autos por consumo de combustible')">Comparar por consumo</button>
-          <button class="quick-btn" onclick="quickSend('Cual conviene mas para revender en 3 anos?')">Mejor para reventa</button>
+        <div class="qbtns">
+          <button class="qbtn" onclick="qs('Cual es el mejor auto del inventario en relacion precio-calidad?')">Mejor precio-calidad</button>
+          <button class="qbtn" onclick="qs('Que auto recomendas para familia con bajo presupuesto?')">Para familia</button>
+          <button class="qbtn" onclick="qs('Cual tiene menor costo a largo plazo?')">Menor costo</button>
+          <button class="qbtn" onclick="qs('Comparame los autos por consumo')">Por consumo</button>
+          <button class="qbtn" onclick="qs('Cual conviene para revender en 3 anos?')">Mejor reventa</button>
         </div>
         <div class="chat-outer">
-          <div class="chat-messages" id="chat-messages"></div>
-          <div class="chat-input-row">
-            <textarea class="chat-textarea" id="chat-input" placeholder="Ej: Busco un auto economico para la ciudad, cual me recomendas?" rows="1" onkeydown="chatKeyDown(event)"></textarea>
-            <button class="btn-primary btn-sm" id="chat-send-btn" onclick="sendChat()" style="align-self:flex-end;flex-shrink:0;">Enviar</button>
+          <div class="chat-msgs" id="chat-msgs"></div>
+          <div class="chat-row">
+            <textarea class="chat-ta" id="chat-inp" placeholder="Ej: Busco un auto economico para la ciudad..." rows="1" onkeydown="ckd(event)"></textarea>
+            <button class="btn btn-sm" id="chat-btn" onclick="sendChat()" style="align-self:flex-end;flex-shrink:0;">Enviar</button>
           </div>
         </div>
       </div>
@@ -429,439 +557,508 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--f
 </div>
 
 <script>
-var S = { company:null, inventory:[], selected:[], sheets:{url:'',mode:'csv',connected:false}, apiKey:'', chatHistory:[] };
+// ══ STATE ══
+var S = {
+  company:null, inventory:[], selected:[], sheets:{url:'',mode:'csv',connected:false},
+  apiKey:'', chatHistory:[], sortCol:'', sortDir:1, viewMode:'table',
+  compHistory:[], syncTimer:null, lastSync:null, editingId:null
+};
 
-// BOOT
+// ══ BOOT ══
 function boot() {
   try {
-    var c=localStorage.getItem('ad_company'), inv=localStorage.getItem('ad_inventory'),
-        sel=localStorage.getItem('ad_selected'), sh=localStorage.getItem('ad_sheets'),
-        ak=localStorage.getItem('ad_apikey');
-    if(c) S.company=JSON.parse(c);
-    if(inv) S.inventory=JSON.parse(inv);
-    if(sel) S.selected=JSON.parse(sel);
-    if(sh) S.sheets=JSON.parse(sh);
-    if(ak) S.apiKey=ak;
+    var keys=['ad_company','ad_inventory','ad_selected','ad_sheets','ad_apikey','ad_comphistory'];
+    var vals=keys.map(function(k){return localStorage.getItem(k);});
+    if(vals[0]) S.company=JSON.parse(vals[0]);
+    if(vals[1]) S.inventory=JSON.parse(vals[1]);
+    if(vals[2]) S.selected=JSON.parse(vals[2]);
+    if(vals[3]) S.sheets=JSON.parse(vals[3]);
+    if(vals[4]) S.apiKey=vals[4];
+    if(vals[5]) S.compHistory=JSON.parse(vals[5]);
+    var theme=localStorage.getItem('ad_theme')||'dark';
+    document.documentElement.setAttribute('data-theme',theme);
+    document.getElementById('theme-btn').textContent=theme==='dark'?'🌙':'☀️';
   } catch(e){}
-  S.company ? showDashboard() : showScreen('welcome');
+  S.company ? showDash() : showScreen('welcome');
 }
 
-// SCREENS
-function showScreen(id) {
-  document.querySelectorAll('.screen').forEach(function(el){el.classList.remove('active');});
-  var el=document.getElementById(id); if(el) el.classList.add('active');
-}
-function showDashboard() {
-  showScreen('dashboard');
-  renderHeader(); renderCompany(); renderInventory(); renderChips(); updateSheetsUI(); updateChatUI();
-  if(S.sheets.url){ S.sheets.mode==='csv'?setVal('csv-url',S.sheets.url):setVal('script-url',S.sheets.url); }
-}
-function goToSetup() {
-  if(S.company){ setVal('s-nombre',S.company.nombre);setVal('s-tipo',S.company.tipo);setVal('s-zona',S.company.zona);setVal('s-especialidad',S.company.especialidad); }
-  document.getElementById('setup-error').style.display='none';
-  showScreen('setup');
-}
-function goBack(){ S.company ? showDashboard() : showScreen('welcome'); }
+// ══ SCREENS ══
+function showScreen(id){document.querySelectorAll('.screen').forEach(function(e){e.classList.remove('active');});var el=document.getElementById(id);if(el)el.classList.add('active');}
+function showDash(){showScreen('dashboard');renderHeader();renderCompany();renderInv();renderChips();updateSheetsUI();updateChatUI();if(S.sheets.url){S.sheets.mode==='csv'?setVal('csv-url',S.sheets.url):setVal('as-url',S.sheets.url);}if(S.sheets.syncInterval)setSyncInterval();}
+function goSetup(){if(S.company){setVal('s-nom',S.company.nombre);setVal('s-tipo',S.company.tipo);setVal('s-zona',S.company.zona);setVal('s-esp',S.company.especialidad);}document.getElementById('setup-err').style.display='none';showScreen('setup');}
+function goBack(){S.company?showDash():showScreen('welcome');}
 
-// COMPANY
-function saveCompany() {
-  var n=getVal('s-nombre'),t=getVal('s-tipo'),z=getVal('s-zona'),e=getVal('s-especialidad');
-  var errEl=document.getElementById('setup-error');
-  if(!n||!t||!z||!e){ errEl.textContent='Completá todos los campos obligatorios.';errEl.style.display='block';return; }
-  errEl.style.display='none';
+// ══ THEME ══
+function toggleTheme(){var t=document.documentElement.getAttribute('data-theme')==='dark'?'light':'dark';document.documentElement.setAttribute('data-theme',t);document.getElementById('theme-btn').textContent=t==='dark'?'🌙':'☀️';localStorage.setItem('ad_theme',t);}
+
+// ══ COMPANY ══
+function saveCompany(){
+  var n=getVal('s-nom'),t=getVal('s-tipo'),z=getVal('s-zona'),e=getVal('s-esp');
+  var err=document.getElementById('setup-err');
+  if(!n||!t||!z||!e){err.textContent='Completá todos los campos.';err.style.display='block';return;}
+  err.style.display='none';
   S.company={nombre:n,tipo:t,zona:z,especialidad:e};
-  save('ad_company',S.company); showDashboard(); toast('Concesionaria guardada','success');
+  save('ad_company',S.company);showDash();toast('Concesionaria guardada','ok');
 }
-function renderHeader() {
-  var el=document.getElementById('hdr-company');
-  if(el&&S.company) el.innerHTML='<strong>'+esc(S.company.nombre)+'</strong> &middot; '+esc(S.company.tipo);
-}
-function renderCompany() {
-  if(!S.company) return;
-  var c=S.company;
-  var f=document.getElementById('company-fields');
-  if(f) f.innerHTML=[['Nombre',c.nombre],['Tipo',c.tipo],['Zona',c.zona],['Especialidad',c.especialidad]].map(function(x){return'<div class="info-field"><label>'+x[0]+'</label><p>'+esc(x[1])+'</p></div>';}).join('');
-  var s=document.getElementById('company-stats');
+function renderHeader(){var el=document.getElementById('hdr-co');if(el&&S.company)el.innerHTML='<strong>'+esc(S.company.nombre)+'</strong> &middot; '+esc(S.company.tipo);}
+function renderCompany(){
+  if(!S.company)return;
+  var f=document.getElementById('co-fields');
+  if(f)f.innerHTML=[['Nombre',S.company.nombre],['Tipo',S.company.tipo],['Zona',S.company.zona],['Especialidad',S.company.especialidad]].map(function(x){return'<div class="ifield"><label>'+x[0]+'</label><p>'+esc(x[1])+'</p></div>';}).join('');
+  var s=document.getElementById('co-stats');
   if(s){
-    var total=S.inventory.length, fromSh=S.inventory.filter(function(m){return m.fuente==='sheets';}).length;
+    var total=S.inventory.length,fromSh=S.inventory.filter(function(m){return m.fuente==='sheets';}).length;
     var avgP=total>0?Math.round(S.inventory.reduce(function(a,m){return a+Number(m.precio);},0)/total):0;
-    s.innerHTML=[['Total modelos',total],['Desde Sheets',fromSh],['Seleccionados',S.selected.length],['Precio promedio',total>0?'USD '+avgP.toLocaleString():'—']].map(function(x){return'<div class="info-field"><label>'+x[0]+'</label><p>'+x[1]+'</p></div>';}).join('');
+    s.innerHTML=[['Total modelos',total],['Desde Sheets',fromSh],['Seleccionados',S.selected.length],['Precio promedio',total>0?'USD '+avgP.toLocaleString():'—']].map(function(x){return'<div class="ifield"><label>'+x[0]+'</label><p>'+x[1]+'</p></div>';}).join('');
   }
 }
 
-// INVENTORY
-function saveModel() {
-  var errEl=document.getElementById('modal-model-error');
+// ══ INVENTORY ══
+function openAdd(){S.editingId=null;clearModelForm();document.getElementById('mModel-title').textContent='Agregar modelo';openOverlay('mModel');}
+function openEdit(id){
+  var m=S.inventory.find(function(x){return x.id===id;});if(!m)return;
+  S.editingId=id;
+  document.getElementById('mModel-title').textContent='Editar modelo';
+  setVal('f-marca',m.marca);setVal('f-modelo',m.modelo);setVal('f-anio',m.anio);setVal('f-seg',m.segmento||'');
+  setVal('f-precio',m.precio);setVal('f-dep',m.depreciacion);setVal('f-pat',m.patente);
+  setVal('f-con',m.consumo);setVal('f-rev',m.reventa);setVal('f-equ',m.equipamiento);setVal('f-img',m.imagen||'');
+  openOverlay('mModel');
+}
+function saveModel(){
+  var errEl=document.getElementById('mModel-err');
   var marca=getVal('f-marca'),modelo=getVal('f-modelo'),anio=getVal('f-anio'),
-      precio=getVal('f-precio'),dep=getVal('f-depreciacion'),patente=getVal('f-patente'),
-      consumo=getVal('f-consumo'),reventa=getVal('f-reventa'),equip=getVal('f-equipamiento'),seg=getVal('f-segmento');
-  if(!marca||!modelo||!anio||!precio||dep===''||!patente||!consumo||!reventa||!equip){
-    errEl.textContent='Completá todos los campos marcados con *.';errEl.style.display='block';return;
+      precio=getVal('f-precio'),dep=getVal('f-dep'),pat=getVal('f-pat'),
+      con=getVal('f-con'),rev=getVal('f-rev'),equ=getVal('f-equ'),
+      seg=getVal('f-seg'),img=getVal('f-img');
+  if(!marca||!modelo||!anio||!precio||dep===''||!pat||!con||!rev||!equ){
+    errEl.textContent='Completá todos los campos con *.';errEl.style.display='block';return;
   }
   errEl.style.display='none';
-  var m={id:Date.now(),marca:marca,modelo:modelo,anio:Number(anio),precio:Number(precio),depreciacion:Number(dep),patente:Number(patente),consumo:Number(consumo),reventa:Number(reventa),equipamiento:Number(equip),segmento:seg,fuente:'manual'};
-  S.inventory.push(m);
-  if(S.selected.indexOf(m.id)===-1) S.selected.push(m.id);
-  saveAll(); closeModal('modalAddModel'); clearModelForm();
-  renderInventory(); renderChips(); renderCompany();
-  toast(m.marca+' '+m.modelo+' agregado','success');
-  if(S.sheets.mode==='script'&&S.sheets.connected&&S.sheets.url) postToScript(m);
+  if(S.editingId){
+    var idx=S.inventory.findIndex(function(x){return x.id===S.editingId;});
+    if(idx!==-1){S.inventory[idx]=Object.assign(S.inventory[idx],{marca:marca,modelo:modelo,anio:Number(anio),precio:Number(precio),depreciacion:Number(dep),patente:Number(pat),consumo:Number(con),reventa:Number(rev),equipamiento:Number(equ),segmento:seg,imagen:img});}
+    toast('Modelo actualizado','ok');
+  } else {
+    var m={id:Date.now(),marca:marca,modelo:modelo,anio:Number(anio),precio:Number(precio),depreciacion:Number(dep),patente:Number(pat),consumo:Number(con),reventa:Number(rev),equipamiento:Number(equ),segmento:seg,imagen:img,fuente:'manual'};
+    S.inventory.push(m);
+    if(S.selected.indexOf(m.id)===-1)S.selected.push(m.id);
+    if(S.sheets.mode==='script'&&S.sheets.connected&&S.sheets.url)postToScript(m);
+    toast(marca+' '+modelo+' agregado','ok');
+  }
+  saveAll();closeOverlay('mModel');clearModelForm();renderInv();renderChips();renderCompany();updateFilters();
 }
-function deleteModel(id) {
+function deleteModel(id){
+  if(!confirm('¿Eliminar este modelo?'))return;
   S.inventory=S.inventory.filter(function(m){return m.id!==id;});
   S.selected=S.selected.filter(function(s){return s!==id;});
-  saveAll(); renderInventory(); renderChips(); renderCompany(); toast('Modelo eliminado','info');
+  saveAll();renderInv();renderChips();renderCompany();updateFilters();toast('Modelo eliminado','inf');
 }
-function toggleSelect(id) {
-  var i=S.selected.indexOf(id);
-  i===-1?S.selected.push(id):S.selected.splice(i,1);
-  save('ad_selected',S.selected); renderInventory(); renderChips(); renderCompany();
+function toggleSel(id){
+  var i=S.selected.indexOf(id);i===-1?S.selected.push(id):S.selected.splice(i,1);
+  save('ad_selected',S.selected);renderInv();renderChips();renderCompany();
 }
-function selectAll() {
-  S.selected=S.inventory.map(function(m){return m.id;});
-  save('ad_selected',S.selected); renderInventory(); renderChips(); renderCompany();
-  toast('Todos seleccionados','info');
-}
-function clearSelection() {
-  S.selected=[]; save('ad_selected',S.selected); renderInventory(); renderChips(); renderCompany();
-}
-function addFromSheet(row) {
-  var marca=String(row.marca||'').trim(), modelo=String(row.modelo||'').trim();
-  if(!marca||!modelo) return false;
+function selectAll(){S.selected=S.inventory.map(function(m){return m.id;});save('ad_selected',S.selected);renderInv();renderChips();renderCompany();toast('Todos seleccionados','inf');}
+function clearSel(){S.selected=[];save('ad_selected',S.selected);renderInv();renderChips();renderCompany();}
+function addFromSheet(row){
+  var marca=String(row.marca||'').trim(),modelo=String(row.modelo||'').trim();
+  if(!marca||!modelo)return false;
   var precio=parseFloat(String(row.precio||'').replace(/[^0-9.]/g,''))||0;
-  var reventa=parseFloat(row.reventa)||0, equip=parseFloat(row.equipamiento)||0;
-  if(!precio||!reventa||!equip) return false;
-  var anioVal=Number(row.anio)||0;
-  var dup=S.inventory.some(function(m){return m.marca===marca&&m.modelo===modelo&&Number(m.anio)===anioVal;});
-  if(dup) return false;
-  S.inventory.push({id:Date.now()+Math.random(),marca:marca,modelo:modelo,anio:anioVal,precio:precio,depreciacion:parseFloat(row.depreciacion)||0,patente:parseFloat(row.patente)||0,consumo:parseFloat(row.consumo)||0,reventa:reventa,equipamiento:equip,segmento:String(row.segmento||'').trim(),fuente:'sheets'});
+  var rev=parseFloat(row.reventa)||0,equ=parseFloat(row.equipamiento)||0;
+  if(!precio||!rev||!equ)return false;
+  var anioV=Number(row.anio)||0;
+  var dup=S.inventory.some(function(m){return m.marca===marca&&m.modelo===modelo&&Number(m.anio)===anioV;});
+  if(dup)return false;
+  S.inventory.push({id:Date.now()+Math.random(),marca:marca,modelo:modelo,anio:anioV,precio:precio,depreciacion:parseFloat(row.depreciacion)||0,patente:parseFloat(row.patente)||0,consumo:parseFloat(row.consumo)||0,reventa:rev,equipamiento:equ,segmento:String(row.segmento||'').trim(),imagen:String(row.imagen||row.foto||'').trim(),fuente:'sheets'});
   return true;
 }
-function renderInventory() {
-  var el=document.getElementById('inv-content'), selEl=document.getElementById('sel-inv-content'), countEl=document.getElementById('inv-count');
-  if(countEl) countEl.textContent=S.inventory.length+' modelo'+(S.inventory.length!==1?'s':'')+' cargado'+(S.inventory.length!==1?'s':'');
-  var empty='<div class="empty"><div class="empty-icon">📦</div><div class="empty-title">Sin modelos</div><div class="empty-text">Agregá tu primer modelo o sincronizá con Google Sheets</div></div>';
-  if(!el) return;
-  if(S.inventory.length===0){el.innerHTML=empty;if(selEl)selEl.innerHTML=empty;return;}
-  var rows=S.inventory.map(function(m){
+
+// ── FILTERS ──
+function getFiltered(){
+  var q=(getVal('f-search')||'').toLowerCase();
+  var brand=getVal('f-brand'),seg=getVal('f-segment');
+  var pmin=parseFloat(getVal('f-pmin'))||0,pmax=parseFloat(getVal('f-pmax'))||Infinity;
+  return S.inventory.filter(function(m){
+    if(q&&(m.marca+' '+m.modelo+' '+m.anio).toLowerCase().indexOf(q)===-1)return false;
+    if(brand&&m.marca!==brand)return false;
+    if(seg&&m.segmento!==seg)return false;
+    if(m.precio<pmin||m.precio>pmax)return false;
+    return true;
+  });
+}
+function updateFilters(){
+  var brands=[...new Set(S.inventory.map(function(m){return m.marca;}))].sort();
+  var segs=[...new Set(S.inventory.filter(function(m){return m.segmento;}).map(function(m){return m.segmento;}))].sort();
+  var bEl=document.getElementById('f-brand'),sEl=document.getElementById('f-segment');
+  if(bEl){var bv=bEl.value;bEl.innerHTML='<option value="">Todas las marcas</option>'+brands.map(function(b){return'<option'+(b===bv?' selected':'')+'>'+esc(b)+'</option>';}).join('');}
+  if(sEl){var sv=sEl.value;sEl.innerHTML='<option value="">Todos los segmentos</option>'+segs.map(function(s){return'<option'+(s===sv?' selected':'')+'>'+esc(s)+'</option>';}).join('');}
+}
+function clearFilters(){setVal('f-search','');setVal('f-brand','');setVal('f-segment','');setVal('f-pmin','');setVal('f-pmax','');renderInv();}
+
+// ── SORT ──
+function sortBy(col){if(S.sortCol===col){S.sortDir*=-1;}else{S.sortCol=col;S.sortDir=1;}renderInv();}
+function applySorted(arr){
+  if(!S.sortCol)return arr;
+  return arr.slice().sort(function(a,b){
+    var av=a[S.sortCol],bv=b[S.sortCol];
+    if(typeof av==='string')return av.localeCompare(bv)*S.sortDir;
+    return(Number(av)-Number(bv))*S.sortDir;
+  });
+}
+
+// ── VIEW TOGGLE ──
+function toggleView(){S.viewMode=S.viewMode==='table'?'cards':'table';document.getElementById('view-btn').textContent=S.viewMode==='table'?'Vista tarjetas':'Vista tabla';renderInv();}
+
+// ── RENDER ──
+function renderInv(){
+  var el=document.getElementById('inv-content'),selEl=document.getElementById('sel-content'),countEl=document.getElementById('inv-count');
+  var filtered=getFiltered(),sorted=applySorted(filtered);
+  if(countEl)countEl.textContent=sorted.length+' de '+S.inventory.length+' modelo'+(S.inventory.length!==1?'s':'');
+  var empty='<div class="empty"><div class="empty-icon">📦</div><div class="empty-title">Sin modelos</div><div class="empty-text">Agrega modelos o sincroniza con Google Sheets</div></div>';
+  if(!el)return;
+  if(sorted.length===0){el.innerHTML=empty;if(selEl)selEl.innerHTML=empty;return;}
+  if(S.viewMode==='cards'){renderCardView(el,sorted);}else{renderTableView(el,sorted);}
+  if(selEl)renderSelView(selEl,sorted);
+}
+function renderTableView(el,sorted){
+  function th(label,col){var dir=S.sortCol===col?(S.sortDir===1?' sort-asc':' sort-desc'):'';return'<th class="'+dir+'" onclick="sortBy(\''+col+'\')">'+label+'<span class="sort-icon"></span></th>';}
+  var rows=sorted.map(function(m){
     var sel=S.selected.indexOf(m.id)!==-1;
-    var badge=m.fuente==='sheets'?'<span class="source-badge source-sheets">Sheets</span>':'<span class="source-badge source-manual">Manual</span>';
-    return '<tr class="'+(sel?'row-selected':'')+'">'+
-      '<td><div class="model-name">'+esc(m.modelo)+'</div><div class="model-brand">'+esc(m.marca)+' &middot; '+m.anio+'</div></td>'+
+    var badge=m.fuente==='sheets'?'<span class="sbadge s-sheets">Sheets</span>':'<span class="sbadge s-manual">Manual</span>';
+    var imgHtml=m.imagen?'<img src="'+esc(m.imagen)+'" class="model-img" onerror="this.style.display=\'none\'">':'<div class="model-img-ph">🚗</div>';
+    return'<tr class="'+(sel?'row-sel':'')+'">'+
+      '<td>'+imgHtml+'</td>'+
+      '<td><div class="mn">'+esc(m.modelo)+'</div><div class="mb2">'+esc(m.marca)+' &middot; '+m.anio+'</div></td>'+
       '<td>'+badge+'</td>'+
-      '<td>USD '+Number(m.precio).toLocaleString()+'</td>'+
-      '<td>'+m.depreciacion+'%</td>'+
-      '<td>USD '+m.patente+'</td>'+
-      '<td>'+m.consumo+' L</td>'+
-      '<td>'+m.reventa+'/5</td>'+
-      '<td>'+m.equipamiento+'/5</td>'+
+      '<td style="font-family:var(--mono);">USD '+Number(m.precio).toLocaleString()+'</td>'+
+      '<td style="font-family:var(--mono);">'+m.depreciacion+'%</td>'+
+      '<td style="font-family:var(--mono);">USD '+m.patente+'</td>'+
+      '<td style="font-family:var(--mono);">'+m.consumo+' L</td>'+
+      '<td style="font-family:var(--mono);">'+m.reventa+'/5</td>'+
+      '<td style="font-family:var(--mono);">'+m.equipamiento+'/5</td>'+
       '<td>'+(m.segmento||'—')+'</td>'+
-      '<td><div class="flex gap-8">'+
-        '<button class="btn-icon" onclick="toggleSelect('+m.id+')">'+(sel?'✓':'○')+'</button>'+
-        '<button class="btn-icon" onclick="deleteModel('+m.id+')" style="color:var(--bad);">✕</button>'+
+      '<td><div class="flex g8">'+
+        '<button class="btn-icon" onclick="toggleSel('+m.id+')" title="'+(sel?'Deseleccionar':'Seleccionar')+'">'+(sel?'✓':'○')+'</button>'+
+        '<button class="btn-icon" onclick="openEdit('+m.id+')" title="Editar">✎</button>'+
+        '<button class="btn-icon" onclick="deleteModel('+m.id+')" title="Eliminar" style="color:var(--bad);">✕</button>'+
       '</div></td></tr>';
   }).join('');
-  el.innerHTML='<div style="overflow-x:auto;"><table class="inv-table"><thead><tr><th>Modelo</th><th>Fuente</th><th>Precio</th><th>Deprec.</th><th>Patente</th><th>Consumo</th><th>Reventa</th><th>Equip.</th><th>Segmento</th><th></th></tr></thead><tbody>'+rows+'</tbody></table></div>';
-  if(selEl){
-    var sRows=S.inventory.map(function(m){
-      var sel=S.selected.indexOf(m.id)!==-1;
-      return '<tr class="'+(sel?'row-selected':'')+'" style="cursor:pointer;" onclick="toggleSelect('+m.id+')">'+
-        '<td><div class="model-name">'+esc(m.modelo)+'</div><div class="model-brand">'+esc(m.marca)+' &middot; '+m.anio+'</div></td>'+
-        '<td style="font-family:var(--font-mono);">USD '+Number(m.precio).toLocaleString()+'</td>'+
-        '<td>'+(sel?'<span style="color:var(--accent);font-weight:700;">✓ Seleccionado</span>':'<span style="color:var(--text-muted);">Clic para seleccionar</span>')+'</td></tr>';
-    }).join('');
-    selEl.innerHTML='<div style="overflow-x:auto;"><table class="inv-table"><thead><tr><th>Modelo</th><th>Precio</th><th>Estado</th></tr></thead><tbody>'+sRows+'</tbody></table></div>';
-  }
+  el.innerHTML='<div style="overflow-x:auto;"><table class="tbl"><thead><tr><th></th>'+th('Modelo','modelo')+th('Fuente','fuente')+th('Precio','precio')+th('Deprec.','depreciacion')+th('Patente','patente')+th('Consumo','consumo')+th('Reventa','reventa')+th('Equip.','equipamiento')+'<th>Segmento</th><th></th></tr></thead><tbody>'+rows+'</tbody></table></div>';
 }
-function renderChips() {
-  var el=document.getElementById('chips'); if(!el) return;
+function renderCardView(el,sorted){
+  var html=sorted.map(function(m){
+    var sel=S.selected.indexOf(m.id)!==-1;
+    var imgHtml=m.imagen?'<img src="'+esc(m.imagen)+'" style="width:100%;height:100%;object-fit:cover;" onerror="this.parentNode.innerHTML=\'🚗\'">':'🚗';
+    return'<div class="inv-card'+(sel?' selected':'')+'" onclick="toggleSel('+m.id+')">'+
+      '<div class="inv-card-img">'+imgHtml+'</div>'+
+      '<div class="inv-card-body">'+
+        '<div class="inv-card-name">'+esc(m.modelo)+'</div>'+
+        '<div class="inv-card-sub">'+esc(m.marca)+' &middot; '+m.anio+(m.segmento?' &middot; '+m.segmento:'')+'</div>'+
+        '<div class="inv-card-stats">'+
+          '<div class="inv-card-stat">Precio <span>USD '+Number(m.precio).toLocaleString()+'</span></div>'+
+          '<div class="inv-card-stat">Consumo <span>'+m.consumo+' L</span></div>'+
+          '<div class="inv-card-stat">Reventa <span>'+m.reventa+'/5</span></div>'+
+          '<div class="inv-card-stat">Equip. <span>'+m.equipamiento+'/5</span></div>'+
+        '</div>'+
+      '</div>'+
+      '<div class="inv-card-footer">'+
+        '<span style="font-size:11px;color:'+(sel?'var(--accent)':'var(--muted)')+';">'+(sel?'✓ Seleccionado':'Clic para seleccionar')+'</span>'+
+        '<div class="flex g8" onclick="event.stopPropagation()">'+
+          '<button class="btn-icon" onclick="openEdit('+m.id+')" title="Editar">✎</button>'+
+          '<button class="btn-icon" onclick="deleteModel('+m.id+')" title="Eliminar" style="color:var(--bad);">✕</button>'+
+        '</div>'+
+      '</div>'+
+    '</div>';
+  }).join('');
+  el.innerHTML='<div class="card-grid">'+html+'</div>';
+}
+function renderSelView(el,sorted){
+  if(sorted.length===0){el.innerHTML='<div class="empty"><div class="empty-icon">📦</div><div class="empty-title">Sin modelos</div></div>';return;}
+  var rows=sorted.map(function(m){
+    var sel=S.selected.indexOf(m.id)!==-1;
+    return'<tr class="'+(sel?'row-sel':'')+'" style="cursor:pointer;" onclick="toggleSel('+m.id+')">'+
+      '<td><div class="mn">'+esc(m.modelo)+'</div><div class="mb2">'+esc(m.marca)+' &middot; '+m.anio+'</div></td>'+
+      '<td style="font-family:var(--mono);">USD '+Number(m.precio).toLocaleString()+'</td>'+
+      '<td>'+(sel?'<span style="color:var(--accent);font-weight:700;">✓ Seleccionado</span>':'<span style="color:var(--muted);">Seleccionar</span>')+'</td></tr>';
+  }).join('');
+  el.innerHTML='<div style="overflow-x:auto;"><table class="tbl"><thead><tr><th>Modelo</th><th>Precio</th><th>Estado</th></tr></thead><tbody>'+rows+'</tbody></table></div>';
+}
+function renderChips(){
+  var el=document.getElementById('chips');if(!el)return;
   var sel=S.inventory.filter(function(m){return S.selected.indexOf(m.id)!==-1;});
   if(sel.length===0){el.innerHTML='<span class="chips-empty">Seleccioná modelos desde el inventario</span>';return;}
-  el.innerHTML=sel.map(function(m){return'<div class="chip">'+esc(m.marca)+' '+esc(m.modelo)+'<span class="chip-x" onclick="toggleSelect('+m.id+')">×</span></div>';}).join('');
+  el.innerHTML=sel.map(function(m){return'<div class="chip">'+esc(m.marca)+' '+esc(m.modelo)+'<span class="chip-x" onclick="toggleSel('+m.id+')">×</span></div>';}).join('');
 }
-function clearModelForm() {
-  ['f-marca','f-modelo','f-anio','f-precio','f-depreciacion','f-patente','f-consumo'].forEach(function(id){var e=document.getElementById(id);if(e)e.value='';});
-  ['f-reventa','f-equipamiento','f-segmento'].forEach(function(id){var e=document.getElementById(id);if(e)e.selectedIndex=0;});
-  var e=document.getElementById('modal-model-error');if(e)e.style.display='none';
+function clearModelForm(){
+  ['f-marca','f-modelo','f-anio','f-precio','f-dep','f-pat','f-con','f-img'].forEach(function(id){var e=document.getElementById(id);if(e)e.value='';});
+  ['f-rev','f-equ','f-seg'].forEach(function(id){var e=document.getElementById(id);if(e)e.selectedIndex=0;});
+  var e=document.getElementById('mModel-err');if(e)e.style.display='none';
 }
 
-// SHEETS
-function switchSheetsMode(mode) {
-  S.sheets.mode=mode;
-  document.getElementById('sheets-csv-panel').style.display=mode==='csv'?'block':'none';
-  document.getElementById('sheets-script-panel').style.display=mode==='script'?'block':'none';
-  document.getElementById('itab-csv').classList.toggle('active',mode==='csv');
-  document.getElementById('itab-script').classList.toggle('active',mode==='script');
+// ── EXPORT CSV ──
+function exportCSV(){
+  if(S.inventory.length===0){toast('No hay modelos para exportar','err');return;}
+  var cols=['marca','modelo','anio','precio','depreciacion','patente','consumo','reventa','equipamiento','segmento','fuente','imagen'];
+  var rows=[cols.join(',')].concat(S.inventory.map(function(m){return cols.map(function(c){var v=m[c]||'';return typeof v==='string'&&v.indexOf(',')!==-1?'"'+v+'"':v;}).join(',');}));
+  var blob=new Blob([rows.join('\n')],{type:'text/csv'});
+  var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='inventario_autodesk.csv';a.click();
+  toast('CSV exportado','ok');
 }
-function syncCSV() {
-  var url=getVal('csv-url'), fb=document.getElementById('csv-feedback');
-  if(!url){if(fb)fb.innerHTML='<div class="notice error">Ingresa una URL.</div>';return;}
+
+// ══ SHEETS ══
+function shMode(mode){
+  S.sheets.mode=mode;
+  document.getElementById('sh-csv').style.display=mode==='csv'?'block':'none';
+  document.getElementById('sh-as').style.display=mode==='script'?'block':'none';
+  document.getElementById('itab-csv').classList.toggle('on',mode==='csv');
+  document.getElementById('itab-as').classList.toggle('on',mode==='script');
+}
+function syncCSV(){
+  var url=getVal('csv-url'),fb=document.getElementById('csv-fb');
+  if(!url){if(fb)fb.innerHTML='<div class="notice err">Ingresá una URL.</div>';return;}
   if(fb)fb.innerHTML='<div class="notice">Conectando...</div>';
-  fetchWithProxies(url, function(text){
+  fetchProxy(url,function(text){
     if(text.trim().startsWith('{')&&text.indexOf('"contents"')!==-1){try{text=JSON.parse(text).contents;}catch(e){}}
     var rows=parseCSV(text);
-    if(rows.length===0){if(fb)fb.innerHTML='<div class="notice warn">No se encontraron datos. Verifica los encabezados: marca, modelo, anio, precio, depreciacion, patente, consumo, reventa, equipamiento</div>';return;}
-    var added=0; rows.forEach(function(r){if(addFromSheet(r))added++;});
-    S.sheets.connected=true;S.sheets.url=url; saveAll();updateSheetsUI();renderInventory();renderCompany();
-    if(fb)fb.innerHTML='<div class="notice success">'+added+' modelo'+(added!==1?'s':'')+' importado'+(added!==1?'s':'')+' correctamente.</div>';
-    toast(added+' modelos sincronizados','success');
-  }, function(){
-    if(fb)fb.innerHTML='<div class="notice error">No se pudo conectar. Verifica que el CSV sea publico o usa Apps Script.</div>';
-    toast('Error al sincronizar','error');
-  });
+    if(rows.length===0){if(fb)fb.innerHTML='<div class="notice warn">Sin datos. Verificá los encabezados.</div>';return;}
+    var added=0;rows.forEach(function(r){if(addFromSheet(r))added++;});
+    S.sheets.connected=true;S.sheets.url=url;S.lastSync=new Date();
+    saveAll();updateSheetsUI();renderInv();renderCompany();updateFilters();
+    if(fb)fb.innerHTML='<div class="notice ok">'+added+' modelo'+(added!==1?'s':'')+' importado'+(added!==1?'s':'')+' correctamente.</div>';
+    toast(added+' modelos sincronizados','ok');
+  },function(){if(fb)fb.innerHTML='<div class="notice err">No se pudo conectar. Verificá que el CSV sea público.</div>';toast('Error al sincronizar','err');});
 }
-function syncScript() {
-  var url=getVal('script-url'), fb=document.getElementById('script-feedback');
-  if(!url){if(fb)fb.innerHTML='<div class="notice error">Ingresa la URL del Web App.</div>';return;}
+function syncScript(){
+  var url=getVal('as-url'),fb=document.getElementById('as-fb');
+  if(!url){if(fb)fb.innerHTML='<div class="notice err">Ingresá la URL del Web App.</div>';return;}
   if(fb)fb.innerHTML='<div class="notice">Conectando con Apps Script...</div>';
-  fetchWithProxies(url, function(text){
-    var data; try{data=JSON.parse(text);}catch(e){if(fb)fb.innerHTML='<div class="notice warn">La respuesta no es JSON valido.</div>';return;}
-    if(!Array.isArray(data)){if(fb)fb.innerHTML='<div class="notice warn">La respuesta no es un array. Verifica el Apps Script.</div>';return;}
-    var added=0; data.forEach(function(r){if(addFromSheet(r))added++;});
-    S.sheets.connected=true;S.sheets.url=url;S.sheets.mode='script'; saveAll();updateSheetsUI();renderInventory();renderCompany();
-    if(fb)fb.innerHTML='<div class="notice success">'+added+' modelo'+(added!==1?'s':'')+' sincronizado'+(added!==1?'s':'')+' desde Apps Script.</div>';
-    toast(added+' modelos sincronizados','success');
-  }, function(){
-    if(fb)fb.innerHTML='<div class="notice error">No se pudo conectar. Verifica que el Web App este publicado con acceso "Cualquier persona".</div>';
-    toast('Error al conectar','error');
-  });
+  fetchProxy(url,function(text){
+    var data;try{data=JSON.parse(text);}catch(e){if(fb)fb.innerHTML='<div class="notice warn">Respuesta no es JSON válido.</div>';return;}
+    if(!Array.isArray(data)){if(fb)fb.innerHTML='<div class="notice warn">La respuesta no es un array.</div>';return;}
+    var added=0;data.forEach(function(r){if(addFromSheet(r))added++;});
+    S.sheets.connected=true;S.sheets.url=url;S.sheets.mode='script';S.lastSync=new Date();
+    saveAll();updateSheetsUI();renderInv();renderCompany();updateFilters();
+    if(fb)fb.innerHTML='<div class="notice ok">'+added+' modelo'+(added!==1?'s':'')+' sincronizado'+(added!==1?'s':'')+' desde Apps Script.</div>';
+    toast(added+' modelos sincronizados','ok');
+  },function(){if(fb)fb.innerHTML='<div class="notice err">No se pudo conectar. Verificá permisos del Web App.</div>';toast('Error al conectar','err');});
 }
-function fetchWithProxies(url, onSuccess, onError) {
-  var proxies=[url,'https://corsproxy.io/?'+encodeURIComponent(url),'https://api.allorigins.win/raw?url='+encodeURIComponent(url)];
-  function tryNext(i){
-    if(i>=proxies.length){onError();return;}
-    fetch(proxies[i]).then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.text();}).then(onSuccess).catch(function(){tryNext(i+1);});
-  }
-  tryNext(0);
+function autoSync(){
+  if(!S.sheets.url||!S.sheets.connected)return;
+  if(S.sheets.mode==='script')syncScript();else syncCSV();
 }
-function postToScript(model) {
-  if(!S.sheets.url)return;
-  var proxies=[S.sheets.url,'https://corsproxy.io/?'+encodeURIComponent(S.sheets.url)];
-  function tryPost(i){
-    if(i>=proxies.length)return;
-    fetch(proxies[i],{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(model)}).then(function(){toast('Enviado a Google Sheets','success');}).catch(function(){tryPost(i+1);});
-  }
-  tryPost(0);
+function setSyncInterval(){
+  if(S.syncTimer){clearInterval(S.syncTimer);S.syncTimer=null;}
+  var sel=document.getElementById('sync-interval');
+  var mins=sel?parseInt(sel.value)||0:0;
+  S.sheets.syncInterval=mins;save('ad_sheets',S.sheets);
+  if(mins>0){S.syncTimer=setInterval(autoSync,mins*60000);toast('Auto-sync activada cada '+mins+' min','inf');}
+  else toast('Auto-sync desactivada','inf');
 }
-function updateSheetsUI() {
-  var dot=document.getElementById('sheets-dot'), st=document.getElementById('sheets-status');
-  if(dot)dot.className='status-dot '+(S.sheets.connected?'dot-on':'dot-off');
+function updateSheetsUI(){
+  var dot=document.getElementById('sh-dot'),st=document.getElementById('sh-status');
+  if(dot)dot.className='sdot '+(S.sheets.connected?'dot-on':'dot-off');
   if(st)st.textContent=S.sheets.connected?'Conectado':'Sin configurar';
-  switchSheetsMode(S.sheets.mode||'csv');
+  shMode(S.sheets.mode||'csv');
+  var lbl=document.getElementById('last-sync-lbl');
+  if(lbl)lbl.textContent=S.lastSync?'Último sync: '+S.lastSync.toLocaleTimeString():'Nunca sincronizado';
+  if(S.sheets.syncInterval){var sel=document.getElementById('sync-interval');if(sel)sel.value=S.sheets.syncInterval;}
 }
-function showScriptCode(){var el=document.getElementById('scriptCodeDisplay');if(el)el.textContent=buildScriptCode();openModal('modalScript');}
-function copyScriptCode(){var el=document.getElementById('scriptCodeDisplay');if(!el)return;navigator.clipboard.writeText(el.textContent).then(function(){toast('Codigo copiado','success');}).catch(function(){toast('No se pudo copiar','error');});}
-function buildScriptCode(){
-  return 'function doGet(e) {\n  var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();\n  var data = sheet.getDataRange().getValues();\n  if (data.length < 2) return json([]);\n  var headers = data[0];\n  var rows = data.slice(1).map(function(row) {\n    var obj = {};\n    headers.forEach(function(h, i) { obj[String(h).trim()] = row[i]; });\n    return obj;\n  });\n  return json(rows);\n}\nfunction doPost(e) {\n  var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();\n  var payload = JSON.parse(e.postData.contents);\n  var COLS = ["marca","modelo","anio","precio","depreciacion","patente","consumo","reventa","equipamiento","segmento","fuente"];\n  if (sheet.getLastRow() === 0) sheet.appendRow(COLS);\n  var hdrs = sheet.getRange(1,1,1,sheet.getLastColumn()).getValues()[0];\n  var row = hdrs.map(function(h){return payload[String(h).trim()]!==undefined?payload[String(h).trim()]:"";});\n  sheet.appendRow(row);\n  return json({ success: true });\n}\nfunction json(obj){return ContentService.createTextOutput(JSON.stringify(obj)).setMimeType(ContentService.MimeType.JSON);}';
+function postToScript(model){
+  if(!S.sheets.url)return;
+  var urls=[S.sheets.url,'https://corsproxy.io/?'+encodeURIComponent(S.sheets.url)];
+  function t(i){if(i>=urls.length)return;fetch(urls[i],{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(model)}).then(function(){toast('Enviado a Google Sheets','ok');}).catch(function(){t(i+1);});}
+  t(0);
 }
+function fetchProxy(url,ok,fail){
+  var proxies=[url,'https://corsproxy.io/?'+encodeURIComponent(url),'https://api.allorigins.win/raw?url='+encodeURIComponent(url)];
+  function t(i){if(i>=proxies.length){fail();return;}fetch(proxies[i]).then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.text();}).then(ok).catch(function(){t(i+1);});}
+  t(0);
+}
+function showScript(){var el=document.getElementById('scriptCode');if(el)el.textContent=buildScript();openOverlay('mScript');}
+function copyScript(){var el=document.getElementById('scriptCode');if(!el)return;navigator.clipboard.writeText(el.textContent).then(function(){toast('Código copiado','ok');}).catch(function(){toast('No se pudo copiar','err');});}
+function buildScript(){return'function doGet(e){\n  var s=SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();\n  var d=s.getDataRange().getValues();\n  if(d.length<2)return j([]);\n  var h=d[0];\n  return j(d.slice(1).map(function(r){var o={};h.forEach(function(k,i){o[String(k).trim()]=r[i];});return o;}));\n}\nfunction doPost(e){\n  var s=SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();\n  var p=JSON.parse(e.postData.contents);\n  var C=["marca","modelo","anio","precio","depreciacion","patente","consumo","reventa","equipamiento","segmento","fuente","imagen"];\n  if(s.getLastRow()===0)s.appendRow(C);\n  var h=s.getRange(1,1,1,s.getLastColumn()).getValues()[0];\n  s.appendRow(h.map(function(k){return p[String(k).trim()]!==undefined?p[String(k).trim()]:"";}))\n  return j({success:true});\n}\nfunction j(o){return ContentService.createTextOutput(JSON.stringify(o)).setMimeType(ContentService.MimeType.JSON);}';}
 
-// CSV PARSER
-function parseCSV(raw) {
-  var text=raw.replace(/\r\n/g,'\n').replace(/\r/g,'\n'), lines=text.split('\n');
+// ══ CSV PARSER ══
+function parseCSV(raw){
+  var lines=raw.replace(/\r\n/g,'\n').replace(/\r/g,'\n').split('\n');
   if(lines.length<2)return[];
-  var headers=splitLine(lines[0]).map(function(h){return h.trim().toLowerCase();});
-  var results=[];
-  for(var i=1;i<lines.length;i++){
-    var line=lines[i].trim(); if(!line)continue;
-    var vals=splitLine(line), row={};
-    headers.forEach(function(h,idx){row[h]=vals[idx]!==undefined?vals[idx].trim():'';});
-    results.push(row);
-  }
-  return results;
+  var heads=splitL(lines[0]).map(function(h){return h.trim().toLowerCase();});
+  var res=[];
+  for(var i=1;i<lines.length;i++){var l=lines[i].trim();if(!l)continue;var v=splitL(l),o={};heads.forEach(function(h,idx){o[h]=v[idx]!==undefined?v[idx].trim():'';});res.push(o);}
+  return res;
 }
-function splitLine(line){
-  var res=[],cur='',inQ=false;
-  for(var i=0;i<line.length;i++){var ch=line[i];if(ch==='"'){inQ=!inQ;}else if(ch===','&&!inQ){res.push(cur);cur='';}else{cur+=ch;}}
-  res.push(cur);return res;
-}
+function splitL(line){var r=[],c='',q=false;for(var i=0;i<line.length;i++){var ch=line[i];if(ch==='"'){q=!q;}else if(ch===','&&!q){r.push(c);c='';}else{c+=ch;}}r.push(c);return r;}
 
-// SCORING
-var WEIGHTS={precio:.25,depreciacion:.20,patente:.15,consumo:.20,reventa:.10,equipamiento:.10};
+// ══ SCORING ══
+var W={precio:.25,depreciacion:.20,patente:.15,consumo:.20,reventa:.10,equipamiento:.10};
 var VARS=[
-  {key:'precio',label:'Precio',hb:false,pct:'25%',fmt:function(v){return'USD '+Number(v).toLocaleString();}},
-  {key:'depreciacion',label:'Depreciacion',hb:false,pct:'20%',fmt:function(v){return v+'%';}},
-  {key:'patente',label:'Patente',hb:false,pct:'15%',fmt:function(v){return'USD '+v;}},
-  {key:'consumo',label:'Consumo',hb:false,pct:'20%',fmt:function(v){return v+' L/100km';}},
-  {key:'reventa',label:'Reventa',hb:true,pct:'10%',fmt:function(v){return v+'/5';}},
-  {key:'equipamiento',label:'Equipamiento',hb:true,pct:'10%',fmt:function(v){return v+'/5';}}
+  {key:'precio',label:'Precio',hb:false,pct:'25%',fmt:function(v){return'USD '+Number(v).toLocaleString();},color:'#60a5fa'},
+  {key:'depreciacion',label:'Depreciación',hb:false,pct:'20%',fmt:function(v){return v+'%';},color:'#a78bfa'},
+  {key:'patente',label:'Patente',hb:false,pct:'15%',fmt:function(v){return'USD '+v;},color:'#f472b6'},
+  {key:'consumo',label:'Consumo',hb:false,pct:'20%',fmt:function(v){return v+' L/100km';},color:'#fb923c'},
+  {key:'reventa',label:'Reventa',hb:true,pct:'10%',fmt:function(v){return v+'/5';},color:'#4ade80'},
+  {key:'equipamiento',label:'Equipamiento',hb:true,pct:'10%',fmt:function(v){return v+'/5';},color:'#38d9a9'}
 ];
-function norm(val,mn,mx,hb){if(mx===mn)return 50;return hb?(val-mn)/(mx-mn)*100:(mx-val)/(mx-mn)*100;}
+function norm(v,mn,mx,hb){if(mx===mn)return 50;return hb?(v-mn)/(mx-mn)*100:(mx-v)/(mx-mn)*100;}
 function scoreModels(models){
-  var normMap={};
-  VARS.forEach(function(v){
-    var vals=models.map(function(m){return Number(m[v.key]);});
-    var mn=Math.min.apply(null,vals),mx=Math.max.apply(null,vals);
-    normMap[v.key]=models.map(function(m){return norm(Number(m[v.key]),mn,mx,v.hb);});
-  });
-  return models.map(function(m,i){
-    var total=0,bd={};
-    VARS.forEach(function(v){var s=normMap[v.key][i];bd[v.key]=s;total+=s*WEIGHTS[v.key];});
-    return{model:m,score:Math.round(total*10)/10,bd:bd};
-  });
+  var nm={};
+  VARS.forEach(function(v){var vals=models.map(function(m){return Number(m[v.key]);});var mn=Math.min.apply(null,vals),mx=Math.max.apply(null,vals);nm[v.key]=models.map(function(m){return norm(Number(m[v.key]),mn,mx,v.hb);});});
+  return models.map(function(m,i){var total=0,bd={};VARS.forEach(function(v){var s=nm[v.key][i];bd[v.key]=s;total+=s*W[v.key];});return{model:m,score:Math.round(total*10)/10,bd:bd};});
 }
 
-// COMPARISON
+// ══ COMPARISON ══
 function goCompare(){switchTab('comparacion');}
 function runComparison(){
-  var el=document.getElementById('cmp-output'); if(!el)return;
+  var el=document.getElementById('cmp-out');if(!el)return;
   var models=S.inventory.filter(function(m){return S.selected.indexOf(m.id)!==-1;});
-  if(models.length===0){el.innerHTML='<div class="empty"><div class="empty-icon">📊</div><div class="empty-title">Sin modelos seleccionados</div><div class="empty-text">Selecciona al menos 2 modelos en el panel de Seleccion</div></div>';return;}
-  if(models.length===1){el.innerHTML='<div class="notice warn">Selecciona al menos 2 modelos para comparar.</div>';return;}
-  var scored=scoreModels(models); scored.sort(function(a,b){return b.score-a.score;}); var best=scored[0];
-  var cardHtml='<div class="cmp-cards">'+scored.map(function(s,i){var sc=s.score,cls=sc>=70?'score-hi':sc>=50?'score-md':'score-lo';return'<div class="cmp-card'+(i===0?' best':'')+'">'+(i===0?'<div class="cmp-badge">🏆 Mejor opcion</div>':'')+'<div class="cmp-name">'+esc(s.model.modelo)+'</div><div class="cmp-sub">'+esc(s.model.marca)+' &middot; '+s.model.anio+'</div><div class="cmp-score '+cls+'">'+sc.toFixed(1)+'</div><div class="cmp-score-lbl">Score total</div></div>';}).join('')+'</div>';
-  var ths=scored.map(function(s,i){return'<th'+(i===0?' style="color:var(--accent)"':'')+'>'+esc(s.model.marca)+' '+esc(s.model.modelo)+'</th>';}).join('');
-  var trs=VARS.map(function(v){var vals=scored.map(function(s){return Number(s.model[v.key]);});var bv=v.hb?Math.max.apply(null,vals):Math.min.apply(null,vals);var wv=v.hb?Math.min.apply(null,vals):Math.max.apply(null,vals);var cells=scored.map(function(s){var val=Number(s.model[v.key]);var cls=val===bv?'c-best':(val===wv&&bv!==wv?'c-worst':'');return'<td class="'+cls+'">'+v.fmt(val)+'</td>';}).join('');return'<tr><td>'+v.label+' <span style="color:var(--text-muted);font-size:10px;">('+v.pct+')</span></td>'+cells+'</tr>';}).join('');
-  var scoreRow='<tr class="score-row"><td>Score total</td>'+scored.map(function(s,i){return'<td class="'+(i===0?'c-best':'')+'">'+s.score.toFixed(1)+'</td>';}).join('')+'</tr>';
-  var tableHtml='<div class="card" style="padding:0;overflow:hidden;"><div style="padding:14px 18px 10px;border-bottom:1px solid var(--border)"><div class="card-title">Tabla comparativa</div></div><div style="overflow-x:auto;"><table class="cmp-table"><thead><tr><th>Variable</th>'+ths+'</tr></thead><tbody>'+trs+scoreRow+'</tbody></table></div></div>';
-  var ai=VARS.map(function(v){var w=scored.reduce(function(a,s){var va=Number(a.model[v.key]),vs=Number(s.model[v.key]);return(v.hb?vs>va:vs<va)?s:a;});return'<div class="analysis-item"><div class="analysis-icon">'+(v.hb?'📈':'💰')+'</div><div><div class="analysis-var">'+v.label+'</div><div class="analysis-winner">'+esc(w.model.marca)+' '+esc(w.model.modelo)+'</div><div class="analysis-val">'+v.fmt(w.model[v.key])+'</div></div></div>';}).join('');
-  var aHtml='<div class="card"><div class="card-header"><div class="card-title">Analisis por variable</div></div><div class="notice" style="margin-bottom:14px;"><strong>Mejor opcion general:</strong> '+esc(best.model.marca)+' '+esc(best.model.modelo)+' — Score: <strong>'+best.score.toFixed(1)+' / 100</strong></div><div class="analysis-grid">'+ai+'</div></div>';
-  el.innerHTML=cardHtml+tableHtml+aHtml;
+  if(models.length===0){el.innerHTML='<div class="empty"><div class="empty-icon">📊</div><div class="empty-title">Sin modelos seleccionados</div></div>';return;}
+  if(models.length===1){el.innerHTML='<div class="notice warn">Seleccioná al menos 2 modelos.</div>';return;}
+  var scored=scoreModels(models);scored.sort(function(a,b){return b.score-a.score;});var best=scored[0];
+
+  // Save to history
+  var hEntry={id:Date.now(),date:new Date().toLocaleString(),models:scored.map(function(s){return s.model.marca+' '+s.model.modelo;}),best:best.model.marca+' '+best.model.modelo,bestScore:best.score};
+  S.compHistory.unshift(hEntry);if(S.compHistory.length>20)S.compHistory.pop();
+  save('ad_comphistory',S.compHistory);
+
+  // SCORE CARDS
+  var cards='<div class="cmp-cards">'+scored.map(function(s,i){var sc=s.score,cls=sc>=70?'s-hi':sc>=50?'s-md':'s-lo';return'<div class="cmp-card'+(i===0?' best':'')+'">'+(i===0?'<div class="cmp-badge">🏆 Mejor</div>':'')+'<div class="cmp-name">'+esc(s.model.modelo)+'</div><div class="cmp-sub">'+esc(s.model.marca)+' &middot; '+s.model.anio+'</div><div class="cmp-score '+cls+'">'+sc.toFixed(1)+'</div><div class="cmp-lbl">Score total</div></div>';}).join('')+'</div>';
+
+  // BAR CHART
+  var barChart='<div class="card"><div class="ch"><div class="ct">Comparación visual — Scores</div></div><div class="chart-wrap">'+scored.map(function(s,i){var colors=['#38d9a9','#60a5fa','#f472b6','#fb923c','#a78bfa','#4ade80'];var col=colors[i%colors.length];var pct=s.score;return'<div class="bar-row"><div class="bar-label">'+esc(s.model.marca)+' '+esc(s.model.modelo)+'</div><div class="bar-track"><div class="bar-fill" style="width:'+pct+'%;background:'+col+';"></div></div><div class="bar-val">'+s.score.toFixed(1)+'</div></div>';}).join('')+'</div></div>';
+
+  // TABLE
+  var ths=scored.map(function(s,i){return'<th'+(i===0?' style="color:var(--accent)"':'')+'>'+esc(s.model.marca)+'<br>'+esc(s.model.modelo)+'</th>';}).join('');
+  var trs=VARS.map(function(v){var vals=scored.map(function(s){return Number(s.model[v.key]);});var bv=v.hb?Math.max.apply(null,vals):Math.min.apply(null,vals);var wv=v.hb?Math.min.apply(null,vals):Math.max.apply(null,vals);var cells=scored.map(function(s){var val=Number(s.model[v.key]),cls=val===bv?'c-best':(val===wv&&bv!==wv?'c-worst':'');return'<td class="'+cls+'">'+v.fmt(val)+'</td>';}).join('');return'<tr><td>'+v.label+' <span style="color:var(--muted);font-size:10px;">('+v.pct+')</span></td>'+cells+'</tr>';}).join('');
+  var srow='<tr class="srow"><td>Score total</td>'+scored.map(function(s,i){return'<td class="'+(i===0?'c-best':'')+'">'+s.score.toFixed(1)+'</td>';}).join('')+'</tr>';
+  var table='<div class="card" style="padding:0;overflow:hidden;"><div style="padding:12px 16px 8px;border-bottom:1px solid var(--border)"><div class="ct">Tabla comparativa detallada</div></div><div style="overflow-x:auto;"><table class="cmp-tbl"><thead><tr><th>Variable</th>'+ths+'</tr></thead><tbody>'+trs+srow+'</tbody></table></div></div>';
+
+  // ANALYSIS
+  var ai=VARS.map(function(v){var w=scored.reduce(function(a,s){var va=Number(a.model[v.key]),vs=Number(s.model[v.key]);return(v.hb?vs>va:vs<va)?s:a;});return'<div class="an-item"><div class="an-icon">'+(v.hb?'📈':'💰')+'</div><div><div class="an-var">'+v.label+'</div><div class="an-win">'+esc(w.model.marca)+' '+esc(w.model.modelo)+'</div><div class="an-val">'+v.fmt(w.model[v.key])+'</div></div></div>';}).join('');
+  var analysis='<div class="card"><div class="ch"><div class="ct">Análisis por variable</div></div><div class="notice" style="margin-bottom:12px;"><strong>Mejor opción general:</strong> '+esc(best.model.marca)+' '+esc(best.model.modelo)+' — Score: <strong>'+best.score.toFixed(1)+'/100</strong></div><div class="an-grid">'+ai+'</div></div>';
+
+  el.innerHTML=cards+barChart+table+analysis;
 }
 
-// CHAT IA
-function updateChatUI() {
-  var box=document.getElementById('api-setup-box'), panel=document.getElementById('chat-panel-card');
+// ══ HISTORY ══
+function renderHistory(){
+  var el=document.getElementById('hist-list');if(!el)return;
+  if(S.compHistory.length===0){el.innerHTML='<div class="empty"><div class="empty-icon">📋</div><div class="empty-title">Sin historial</div><div class="empty-text">Las comparaciones se guardan automáticamente</div></div>';return;}
+  el.innerHTML=S.compHistory.map(function(h){return'<div class="hist-item"><div><div class="hist-name">'+esc(h.best)+' <span style="color:var(--accent);font-size:12px;">('+h.bestScore.toFixed(1)+')</span></div><div class="hist-meta">'+h.date+' &middot; '+h.models.join(', ')+'</div></div></div>';}).join('');
+}
+
+// ══ CHAT IA ══
+function updateChatUI(){
+  var box=document.getElementById('api-box'),panel=document.getElementById('chat-card');
   if(!box||!panel)return;
-  if(S.apiKey){ box.style.display='none';panel.style.display='block';if(S.chatHistory.length===0)addWelcomeMsg(); }
-  else{ box.style.display='block';panel.style.display='none'; }
+  if(S.apiKey){box.style.display='none';panel.style.display='block';if(S.chatHistory.length===0)addWelcome();}
+  else{box.style.display='block';panel.style.display='none';}
 }
-function saveApiKey() {
-  var key=getVal('api-key-input').trim();
-  var errEl=document.getElementById('api-key-err');
-  if(!key||!key.startsWith('sk-ant-')){ if(errEl){errEl.textContent='La key debe comenzar con sk-ant-';errEl.style.display='block';}return; }
-  if(errEl)errEl.style.display='none';
-  S.apiKey=key; try{localStorage.setItem('ad_apikey',key);}catch(e){}
-  updateChatUI(); toast('Asesor IA activado','success');
+function saveKey(){
+  var key=getVal('api-inp').trim(),err=document.getElementById('api-err');
+  if(!key||!key.startsWith('sk-ant-')){if(err){err.textContent='La key debe comenzar con sk-ant-';err.style.display='block';}return;}
+  if(err)err.style.display='none';
+  S.apiKey=key;try{localStorage.setItem('ad_apikey',key);}catch(e){}
+  updateChatUI();toast('Asesor IA activado','ok');
 }
-function changeApiKey() {
-  S.apiKey=''; try{localStorage.removeItem('ad_apikey');}catch(e){}
-  var inp=document.getElementById('api-key-input');if(inp)inp.value='';
-  updateChatUI();
+function changeKey(){S.apiKey='';try{localStorage.removeItem('ad_apikey');}catch(e){}var i=document.getElementById('api-inp');if(i)i.value='';updateChatUI();}
+function addWelcome(){
+  var txt=S.inventory.length===0?'Hola, soy tu asesor de AutoDesk Pro. El inventario está vacío. Agrega modelos y vuelve.':'Hola, soy tu asesor. Tengo acceso a tu inventario con <strong>'+S.inventory.length+' modelo'+(S.inventory.length!==1?'s':'')+'</strong>. ¿Qué buscás?';
+  addMsg('ai',txt);
 }
-function addWelcomeMsg() {
-  var inv=S.inventory;
-  var txt=inv.length===0
-    ?'Hola, soy tu asesor de AutoDesk Pro. El inventario esta vacio por ahora. Agrega modelos y vuelve para que pueda recomendarte opciones.'
-    :'Hola, soy tu asesor de AutoDesk Pro. Tengo acceso a tu inventario con <strong>'+inv.length+' modelo'+(inv.length!==1?'s':'')+'</strong>. Contame que buscas y te recomiendo el mejor auto segun tus prioridades.';
-  appendMsg('ai',txt);
-}
-function appendMsg(role, html) {
-  var c=document.getElementById('chat-messages');if(!c)return;
-  var d=document.createElement('div');
-  d.className='chat-msg '+role;
-  d.innerHTML='<div class="chat-avatar '+role+'">'+(role==='ai'?'✦':'U')+'</div><div class="chat-bubble">'+html+'</div>';
+function addMsg(role,html){
+  var c=document.getElementById('chat-msgs');if(!c)return;
+  var d=document.createElement('div');d.className='cmsg '+role;
+  d.innerHTML='<div class="cav '+role+'">'+(role==='ai'?'✦':'U')+'</div><div class="cbub">'+html+'</div>';
   c.appendChild(d);c.scrollTop=c.scrollHeight;
 }
-function showTyping() {
-  var c=document.getElementById('chat-messages');if(!c)return;
-  var d=document.createElement('div');d.className='chat-msg ai';d.id='typing-ind';
-  d.innerHTML='<div class="chat-avatar ai">✦</div><div class="chat-bubble"><div class="typing-wrap"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div></div>';
-  c.appendChild(d);c.scrollTop=c.scrollHeight;
-}
-function hideTyping(){var el=document.getElementById('typing-ind');if(el)el.remove();}
-function buildInventoryCtx() {
-  if(S.inventory.length===0)return'El inventario esta vacio.';
+function showTyping(){var c=document.getElementById('chat-msgs');if(!c)return;var d=document.createElement('div');d.className='cmsg ai';d.id='typ';d.innerHTML='<div class="cav ai">✦</div><div class="cbub"><div class="typ-wrap"><div class="tdot"></div><div class="tdot"></div><div class="tdot"></div></div></div>';c.appendChild(d);c.scrollTop=c.scrollHeight;}
+function hideTyping(){var e=document.getElementById('typ');if(e)e.remove();}
+function buildCtx(){
+  if(S.inventory.length===0)return'El inventario está vacío.';
   var lines=['Inventario ('+S.inventory.length+' modelos):',''];
   var scored=S.inventory.length>=2?scoreModels(S.inventory):null;
   S.inventory.forEach(function(m,i){
     var sc='';if(scored){var s=scored.find(function(x){return x.model.id===m.id;});if(s)sc=' | Score: '+s.score.toFixed(1)+'/100';}
     lines.push((i+1)+'. '+m.marca+' '+m.modelo+' ('+m.anio+')');
-    lines.push('   Precio: USD '+Number(m.precio).toLocaleString()+' | Deprec: '+m.depreciacion+'%/ano | Patente: USD '+m.patente+'/ano');
-    lines.push('   Consumo: '+m.consumo+' L/100km | Reventa: '+m.reventa+'/5 | Equip: '+m.equipamiento+'/5'+(m.segmento?' | '+m.segmento:'')+sc);
+    lines.push('   USD '+Number(m.precio).toLocaleString()+' | Deprec: '+m.depreciacion+'% | Patente: USD '+m.patente+' | Consumo: '+m.consumo+' L | Reventa: '+m.reventa+'/5 | Equip: '+m.equipamiento+'/5'+(m.segmento?' | '+m.segmento:'')+sc);
     lines.push('');
   });
   return lines.join('\n');
 }
-function buildSystemPrompt() {
+function buildSys(){
   var comp=S.company?'Concesionaria: '+S.company.nombre+' ('+S.company.tipo+') | Zona: '+S.company.zona:'';
-  return 'Sos un asesor experto en vehiculos para una concesionaria automotriz profesional. '+
-    'Analizas el inventario disponible y haces recomendaciones objetivas basadas en datos concretos.\n\n'+
-    (comp?comp+'\n\n':'')+
-    buildInventoryCtx()+'\n\n'+
-    'Sistema de scoring: Precio 25%, Depreciacion 20%, Consumo 20%, Patente 15%, Reventa 10%, Equipamiento 10%.\n\n'+
-    'Al recomendar: nombra el modelo en negrita (**nombre**), justifica con datos del inventario, compara opciones cuando sea util, se directo y profesional. Responde siempre en espanol.';
+  return 'Sos un asesor experto en vehiculos para una concesionaria. Analizas el inventario y haces recomendaciones objetivas basadas en datos.\n\n'+(comp?comp+'\n\n':'')+buildCtx()+'\n\nScoring: Precio 25%, Depreciacion 20%, Consumo 20%, Patente 15%, Reventa 10%, Equipamiento 10%.\n\nAl recomendar: nombra el modelo en negrita (**modelo**), justifica con datos concretos, compara opciones. Responde siempre en español.';
 }
-function formatReply(text) {
-  return text.replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>').replace(/\*(.*?)\*/g,'<em>$1</em>').replace(/\n\n/g,'<br><br>').replace(/\n/g,'<br>');
-}
-function quickSend(text){var inp=document.getElementById('chat-input');if(inp)inp.value=text;sendChat();}
-function chatKeyDown(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendChat();}}
-function sendChat() {
-  if(!S.apiKey){toast('Configura tu API Key primero','error');return;}
-  var inp=document.getElementById('chat-input'), btn=document.getElementById('chat-send-btn');
-  var text=inp?inp.value.trim():''; if(!text)return;
-  if(inp)inp.value=''; if(btn)btn.disabled=true;
-  appendMsg('user',esc(text));
-  S.chatHistory.push({role:'user',content:text});
-  showTyping();
-  var msgs=S.chatHistory.map(function(m){return{role:m.role,content:m.content};});
+function fmtReply(t){return t.replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>').replace(/\*(.*?)\*/g,'<em>$1</em>').replace(/\n\n/g,'<br><br>').replace(/\n/g,'<br>');}
+function qs(t){var i=document.getElementById('chat-inp');if(i)i.value=t;sendChat();}
+function ckd(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendChat();}}
+function sendChat(){
+  if(!S.apiKey){toast('Configura tu API Key primero','err');return;}
+  var inp=document.getElementById('chat-inp'),btn=document.getElementById('chat-btn');
+  var text=inp?inp.value.trim():'';if(!text)return;
+  if(inp)inp.value='';if(btn)btn.disabled=true;
+  addMsg('user',esc(text));S.chatHistory.push({role:'user',content:text});showTyping();
   fetch('https://api.anthropic.com/v1/messages',{
     method:'POST',
     headers:{'Content-Type':'application/json','x-api-key':S.apiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
-    body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:1000,system:buildSystemPrompt(),messages:msgs})
+    body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:1000,system:buildSys(),messages:S.chatHistory.map(function(m){return{role:m.role,content:m.content};})})
   })
-  .then(function(r){
-    if(!r.ok)return r.json().then(function(e){throw new Error(e.error&&e.error.message?e.error.message:'Error '+r.status);});
-    return r.json();
-  })
+  .then(function(r){if(!r.ok)return r.json().then(function(e){throw new Error(e.error&&e.error.message?e.error.message:'Error '+r.status);});return r.json();})
   .then(function(data){
     hideTyping();
     var reply=data.content&&data.content[0]&&data.content[0].text?data.content[0].text:'Sin respuesta';
-    S.chatHistory.push({role:'assistant',content:reply});
-    appendMsg('ai',formatReply(reply));
-    if(btn)btn.disabled=false;
+    S.chatHistory.push({role:'assistant',content:reply});addMsg('ai',fmtReply(reply));if(btn)btn.disabled=false;
   })
   .catch(function(err){
     hideTyping();
     var msg='Error al conectar con Claude. ';
-    if(err.message&&err.message.indexOf('401')!==-1)msg+='API Key invalida.';
-    else if(err.message&&err.message.indexOf('429')!==-1)msg+='Limite de requests alcanzado, espera un momento.';
-    else msg+=err.message||'Verifica tu conexion.';
-    appendMsg('ai','<span style="color:var(--bad);">&#9888; '+esc(msg)+'</span>');
-    if(btn)btn.disabled=false;
+    if(err.message&&err.message.indexOf('401')!==-1)msg+='API Key inválida.';
+    else if(err.message&&err.message.indexOf('429')!==-1)msg+='Límite alcanzado, esperá un momento.';
+    else msg+=err.message||'Verificá tu conexión.';
+    addMsg('ai','<span style="color:var(--bad);">⚠ '+esc(msg)+'</span>');if(btn)btn.disabled=false;
   });
 }
-function clearChat(){S.chatHistory=[];var c=document.getElementById('chat-messages');if(c)c.innerHTML='';addWelcomeMsg();}
+function clearChat(){S.chatHistory=[];var c=document.getElementById('chat-msgs');if(c)c.innerHTML='';addWelcome();}
 
-// NAVIGATION
-function switchTab(tab) {
-  document.querySelectorAll('.nav-tab').forEach(function(t){t.classList.toggle('active',t.dataset.tab===tab);});
-  document.querySelectorAll('.panel').forEach(function(p){p.classList.toggle('active',p.id==='panel-'+tab);});
+// ══ NAVIGATION ══
+function switchTab(tab){
+  document.querySelectorAll('.ntab').forEach(function(t){t.classList.toggle('on',t.dataset.tab===tab);});
+  document.querySelectorAll('.panel').forEach(function(p){p.classList.toggle('on',p.id==='panel-'+tab);});
   if(tab==='comparacion')runComparison();
   if(tab==='empresa')renderCompany();
-  if(tab==='inventario'||tab==='seleccion'){renderInventory();renderChips();}
+  if(tab==='inventario'){renderInv();updateFilters();}
+  if(tab==='seleccion'){renderInv();renderChips();}
   if(tab==='chat')updateChatUI();
+  if(tab==='sheets')updateSheetsUI();
 }
 
-// MODALS
-function openModal(id){var el=document.getElementById(id);if(el)el.classList.add('open');}
-function closeModal(id){var el=document.getElementById(id);if(el)el.classList.remove('open');}
-document.addEventListener('click',function(e){if(e.target.classList.contains('modal-overlay'))e.target.classList.remove('open');});
+// ══ OVERLAYS ══
+function openOverlay(id){var e=document.getElementById(id);if(e)e.classList.add('open');if(id==='mHist')renderHistory();}
+function closeOverlay(id){var e=document.getElementById(id);if(e)e.classList.remove('open');}
+document.addEventListener('click',function(e){if(e.target.classList.contains('overlay'))e.target.classList.remove('open');});
 
-// PERSISTENCE
+// ══ PERSISTENCE ══
 function save(key,val){try{localStorage.setItem(key,JSON.stringify(val));}catch(e){}}
 function saveAll(){save('ad_company',S.company);save('ad_inventory',S.inventory);save('ad_selected',S.selected);save('ad_sheets',S.sheets);}
 
-// UTILS
+// ══ UTILS ══
 function esc(s){if(s===null||s===undefined)return'';return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
-function getVal(id){var el=document.getElementById(id);return el?el.value.trim():'';}
-function setVal(id,val){var el=document.getElementById(id);if(el)el.value=val||'';}
+function getVal(id){var e=document.getElementById(id);return e?e.value.trim():'';}
+function setVal(id,val){var e=document.getElementById(id);if(e)e.value=val||'';}
 function toast(msg,type){
   var w=document.getElementById('toasts');if(!w)return;
-  var icons={success:'✓',error:'✕',info:'ℹ'};
-  var t=document.createElement('div');t.className='toast t-'+(type||'info');
-  t.innerHTML='<span style="font-size:15px;flex-shrink:0;">'+(icons[type]||'ℹ')+'</span><span>'+esc(msg)+'</span>';
+  var icons={ok:'✓',err:'✕',inf:'ℹ'};
+  var t=document.createElement('div');t.className='toast t'+(type||'inf');
+  t.innerHTML='<span style="font-size:14px;flex-shrink:0;">'+(icons[type]||'ℹ')+'</span><span>'+esc(msg)+'</span>';
   w.appendChild(t);setTimeout(function(){if(t.parentNode)t.parentNode.removeChild(t);},3200);
 }
 function resetApp(){
-  if(!confirm('Resetear la aplicacion? Se borraran todos los datos.'))return;
+  if(!confirm('¿Resetear? Se borrarán todos los datos.'))return;
   try{localStorage.clear();}catch(e){}
-  S={company:null,inventory:[],selected:[],sheets:{url:'',mode:'csv',connected:false},apiKey:'',chatHistory:[]};
-  showScreen('welcome'); toast('Aplicacion reseteada','info');
+  S={company:null,inventory:[],selected:[],sheets:{url:'',mode:'csv',connected:false},apiKey:'',chatHistory:[],sortCol:'',sortDir:1,viewMode:'table',compHistory:[],syncTimer:null,lastSync:null,editingId:null};
+  showScreen('welcome');toast('App reseteada','inf');
 }
 
 document.addEventListener('DOMContentLoaded',boot);
 </script>
 </body>
 </html>
- 
