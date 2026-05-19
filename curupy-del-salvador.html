@@ -5,380 +5,312 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Curupy del Salvador — Aberdeen Angus</title>
 <style>
-/* ─── TOKENS ─────────────────────────────────────── */
 :root {
-  --dark:    #0d1b2a;
-  --navy:    #17304f;
-  --navy2:   #0f2236;
-  --accent:  #2e5339;
-  --accent2: #3d6b4a;
-  --warm:    #f5f3ee;
-  --white:   #ffffff;
-  --text:    #1c1e24;
-  --muted:   #6b7585;
-  --border:  #dedad3;
-  --line:    #c8c3bb;
-  --font:    'Georgia', 'Times New Roman', serif;
-  --sans:    'Segoe UI', system-ui, -apple-system, sans-serif;
-  --radius:  6px;
-  --shadow:  0 2px 20px rgba(13,27,42,0.1);
+  --dark:   #0d1b2a;
+  --navy:   #17304f;
+  --accent: #2e5339;
+  --acc2:   #3d6b4a;
+  --warm:   #f5f3ee;
+  --white:  #ffffff;
+  --text:   #1c1e24;
+  --muted:  #6b7585;
+  --border: #dedad3;
+  --font:   'Georgia','Times New Roman',serif;
+  --sans:   'Segoe UI',system-ui,-apple-system,sans-serif;
+  --r:      6px;
+  --sh:     0 2px 20px rgba(13,27,42,.1);
 }
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--sans);color:var(--text);background:var(--white);-webkit-font-smoothing:antialiased}
+img{display:block;max-width:100%;height:auto}
+a{text-decoration:none;color:inherit}
 
-/* ─── RESET ──────────────────────────────────────── */
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; }
-body { font-family: var(--sans); color: var(--text); background: var(--white); -webkit-font-smoothing: antialiased; }
-img  { display: block; max-width: 100%; }
-a    { text-decoration: none; color: inherit; }
+/* ─── HEADER ─── */
+header{position:fixed;top:0;left:0;right:0;z-index:100;background:var(--dark);border-bottom:1px solid rgba(255,255,255,.06)}
+.nav-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding:0 32px;height:66px;gap:24px}
+.nav-brand{display:flex;align-items:center;gap:10px;flex-shrink:0}
+.nav-logo{height:34px;width:auto;color:var(--white);flex-shrink:0}
+.nav-name{color:var(--white);font-size:14px;font-weight:600;letter-spacing:.03em;line-height:1.25}
+.nav-name small{display:block;font-size:10px;color:rgba(255,255,255,.38);letter-spacing:.18em;text-transform:uppercase;font-weight:400;margin-top:2px}
+.nav-links{display:flex;gap:2px}
+.nav-links a{color:rgba(255,255,255,.58);font-size:11.5px;font-weight:600;padding:6px 12px;border-radius:4px;letter-spacing:.1em;text-transform:uppercase;transition:color .2s,background .2s}
+.nav-links a:hover,.nav-links a.active{color:var(--white);background:rgba(255,255,255,.08)}
+.nav-cta{background:var(--accent)!important;color:var(--white)!important;border-radius:var(--r)!important}
+.nav-cta:hover{background:var(--acc2)!important}
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:6px;background:none;border:none}
+.hamburger span{display:block;width:22px;height:1.5px;background:rgba(255,255,255,.7);transition:.3s}
+.mob-nav{display:none;flex-direction:column;background:#0a1520;padding:14px 32px 24px;border-top:1px solid rgba(255,255,255,.06)}
+.mob-nav a{color:rgba(255,255,255,.7);font-size:13px;font-weight:600;padding:11px 0;border-bottom:1px solid rgba(255,255,255,.05);letter-spacing:.12em;text-transform:uppercase}
+.mob-nav.open{display:flex}
 
-/* ─── HEADER ─────────────────────────────────────── */
-header {
-  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-  background: var(--dark); border-bottom: 1px solid rgba(255,255,255,0.06);
+/* ─── HERO BANNER ─── */
+.hero-banner{
+  margin-top:66px;
+  position:relative;min-height:520px;
+  display:flex;align-items:center;justify-content:center;
+  background:var(--dark);overflow:hidden;
 }
-.nav-inner {
-  max-width: 1200px; margin: 0 auto;
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 0 32px; height: 68px; gap: 24px;
+.hero-img{
+  position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.45;
 }
-.nav-brand { display: flex; align-items: center; gap: 12px; flex-shrink: 0; }
-.nav-logo  { height: 36px; width: auto; color: var(--white); }
-.nav-brand-name {
-  color: var(--white); font-size: 15px; font-weight: 600;
-  letter-spacing: 0.02em; line-height: 1.2;
+/* placeholder shown until photo is placed */
+.hero-img-placeholder{
+  position:absolute;inset:0;
+  background:linear-gradient(160deg,#0d1b2a 0%,#1a3152 60%,#1a3a2a 100%);
 }
-.nav-brand-name span { display: block; font-size: 10px; color: rgba(255,255,255,0.4); letter-spacing: 0.18em; text-transform: uppercase; font-weight: 400; margin-top: 2px; }
-.nav-links { display: flex; gap: 2px; }
-.nav-links a {
-  color: rgba(255,255,255,0.6); font-size: 12px; font-weight: 600;
-  padding: 7px 14px; border-radius: 4px; letter-spacing: 0.1em;
-  text-transform: uppercase; transition: color 0.2s, background 0.2s;
-}
-.nav-links a:hover { color: var(--white); background: rgba(255,255,255,0.07); }
-.nav-links a.active { color: var(--white); }
-.nav-cta {
-  background: var(--accent) !important; color: var(--white) !important;
-  border-radius: var(--radius) !important;
-}
-.nav-cta:hover { background: var(--accent2) !important; }
-.hamburger {
-  display: none; flex-direction: column; gap: 5px; cursor: pointer;
-  padding: 6px; background: none; border: none;
-}
-.hamburger span { display: block; width: 22px; height: 1.5px; background: rgba(255,255,255,0.7); transition: 0.3s; }
-.mobile-nav {
-  display: none; flex-direction: column; background: var(--navy2);
-  padding: 16px 32px 28px; gap: 0;
-  border-top: 1px solid rgba(255,255,255,0.06);
-}
-.mobile-nav a {
-  color: rgba(255,255,255,0.7); font-size: 13px; font-weight: 600;
-  padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.05);
-  letter-spacing: 0.12em; text-transform: uppercase;
-}
-.mobile-nav.open { display: flex; }
+.hero-overlay{position:absolute;inset:0;background:rgba(13,27,42,.55)}
+.hero-text{position:relative;text-align:center;padding:40px 24px}
+.hero-eyebrow{font-size:11px;font-weight:700;color:rgba(255,255,255,.45);letter-spacing:.22em;text-transform:uppercase;margin-bottom:18px}
+.hero-title{font-size:clamp(32px,6vw,60px);font-weight:700;color:var(--white);letter-spacing:-.02em;line-height:1.1}
+.hero-title em{color:rgba(255,255,255,.55);font-style:normal}
+.hero-rule{width:44px;height:2px;background:var(--accent);margin:22px auto 0}
 
-/* ─── HERO ───────────────────────────────────────── */
-.hero {
-  min-height: 100vh; background: var(--dark);
-  display: flex; flex-direction: column; align-items: center; justify-content: center;
-  text-align: center; padding: 120px 32px 80px; position: relative; overflow: hidden;
-}
-.hero::before {
-  content: ''; position: absolute; inset: 0;
-  background: radial-gradient(ellipse 80% 60% at 50% 55%, rgba(46,83,57,0.18) 0%, transparent 70%);
-  pointer-events: none;
-}
-.hero-logo-wrap { margin-bottom: 40px; position: relative; }
-.hero-logo-icon { width: 80px; height: auto; color: var(--white); opacity: 0.92; margin: 0 auto 18px; }
-.hero-logo-name {
-  font-family: var(--sans); font-size: clamp(28px, 5vw, 46px); font-weight: 300;
-  color: var(--white); letter-spacing: 0.08em; text-transform: uppercase;
-  line-height: 1.2;
-}
-.hero-rule { width: 40px; height: 1px; background: rgba(255,255,255,0.3); margin: 24px auto; }
-.hero-tagline {
-  font-size: clamp(13px, 1.5vw, 15px); color: rgba(255,255,255,0.5);
-  letter-spacing: 0.22em; text-transform: uppercase; font-weight: 400;
-  margin-bottom: 40px; position: relative;
-}
-.hero-desc {
-  max-width: 560px; font-size: 17px; color: rgba(255,255,255,0.65);
-  line-height: 1.8; margin: 0 auto 48px; font-weight: 300; position: relative;
-}
-.hero-btns { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; position: relative; }
-.btn-primary {
-  background: var(--accent); color: var(--white); font-size: 12px; font-weight: 700;
-  padding: 14px 36px; border-radius: var(--radius); border: 1px solid var(--accent);
-  cursor: pointer; letter-spacing: 0.14em; text-transform: uppercase;
-  transition: background 0.2s, border-color 0.2s;
-  font-family: var(--sans);
-}
-.btn-primary:hover { background: var(--accent2); border-color: var(--accent2); }
-.btn-outline {
-  background: transparent; color: rgba(255,255,255,0.75); font-size: 12px; font-weight: 700;
-  padding: 13px 32px; border-radius: var(--radius); border: 1px solid rgba(255,255,255,0.25);
-  cursor: pointer; letter-spacing: 0.14em; text-transform: uppercase;
-  transition: border-color 0.2s, color 0.2s; font-family: var(--sans);
-}
-.btn-outline:hover { border-color: rgba(255,255,255,0.6); color: var(--white); }
-.hero-stats {
-  position: relative; margin-top: 72px; padding-top: 48px;
-  border-top: 1px solid rgba(255,255,255,0.08); width: 100%;
-  display: flex; gap: 56px; justify-content: center; flex-wrap: wrap;
-}
-.stat-num { font-size: 36px; font-weight: 700; color: var(--white); line-height: 1; letter-spacing: -0.03em; }
-.stat-lbl { font-size: 11px; color: rgba(255,255,255,0.4); text-transform: uppercase; letter-spacing: 0.14em; margin-top: 6px; font-weight: 400; }
+/* ─── INTRO CARDS ─── */
+.intro-strip{background:var(--white);padding:56px 32px}
+.intro-strip-inner{max-width:900px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:32px}
+.intro-card{display:flex;align-items:flex-start;gap:18px;padding:28px 32px;border:1px solid var(--border);border-radius:var(--r)}
+.intro-icon{flex-shrink:0;width:40px;height:40px;color:var(--dark);opacity:.7}
+.intro-card p{font-size:15px;color:#3a4050;line-height:1.8}
 
-/* ─── SECTION BASE ───────────────────────────────── */
-section { padding: 96px 32px; }
-.section-inner { max-width: 1100px; margin: 0 auto; }
-.section-label {
-  font-size: 11px; font-weight: 700; color: var(--accent2); letter-spacing: 0.22em;
-  text-transform: uppercase; margin-bottom: 12px; display: block;
-}
-.section-title {
-  font-size: clamp(26px, 3.5vw, 40px); font-weight: 700; color: var(--text);
-  line-height: 1.15; letter-spacing: -0.02em; margin-bottom: 14px;
-  font-family: var(--sans);
-}
-.section-rule { width: 40px; height: 2px; background: var(--accent); margin-bottom: 24px; }
-.section-lead { font-size: 17px; color: var(--muted); line-height: 1.8; max-width: 640px; }
+/* ─── VIDEO STRIP ─── */
+.video-strip{background:var(--warm);padding:56px 32px}
+.video-strip-inner{max-width:800px;margin:0 auto}
+.yt-wrap{position:relative;width:100%;aspect-ratio:16/9;border-radius:var(--r);overflow:hidden;background:var(--dark)}
+.yt-wrap iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
 
-/* ─── GENÉTICA ───────────────────────────────────── */
-#genetica { background: var(--white); }
-.gen-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: start; margin-top: 56px; }
-.gen-text p { font-size: 16px; color: #3d4250; line-height: 1.85; margin-bottom: 22px; }
-.gen-callout {
-  background: var(--dark); border-radius: var(--radius); padding: 32px 36px; margin-top: 36px;
-}
-.gen-callout h3 { font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.45); letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 14px; }
-.gen-callout p  { font-size: 15px; color: rgba(255,255,255,0.75); line-height: 1.75; font-weight: 300; }
-.gen-cards { display: flex; flex-direction: column; gap: 1px; border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
-.g-card {
-  background: var(--white); padding: 26px 28px;
-  border-bottom: 1px solid var(--border);
-}
-.g-card:last-child { border-bottom: none; }
-.g-card-label { font-size: 10px; font-weight: 700; color: var(--accent2); letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 8px; }
-.g-card h3 { font-size: 16px; font-weight: 700; color: var(--text); margin-bottom: 8px; }
-.g-card p  { font-size: 14px; color: var(--muted); line-height: 1.65; }
-.g-card .big-num { font-size: 40px; font-weight: 700; color: var(--dark); line-height: 1; letter-spacing: -0.04em; margin-bottom: 4px; }
-.results-box {
-  background: var(--accent); border-radius: var(--radius); padding: 36px; margin-top: 20px;
-}
-.results-box .label { font-size: 10px; font-weight: 700; color: rgba(255,255,255,0.5); letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 10px; }
-.results-box .cycle { font-size: 18px; font-weight: 600; color: var(--white); margin-bottom: 28px; line-height: 1.4; }
-.results-metrics { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 24px; }
-.metric { background: rgba(0,0,0,0.2); border-radius: 4px; padding: 18px; text-align: center; }
-.metric .val { font-size: 28px; font-weight: 700; color: var(--white); line-height: 1; }
-.metric .lbl { font-size: 11px; color: rgba(255,255,255,0.55); margin-top: 4px; text-transform: uppercase; letter-spacing: 0.1em; }
-.results-box ul { list-style: none; padding: 0; }
-.results-box ul li { font-size: 14px; color: rgba(255,255,255,0.75); padding: 6px 0; padding-left: 16px; position: relative; line-height: 1.55; }
-.results-box ul li::before { content: '—'; position: absolute; left: 0; color: rgba(255,255,255,0.35); }
+/* ─── RESULTADOS ─── */
+.resultados{background:var(--white);padding:64px 32px}
+.resultados-inner{max-width:900px;margin:0 auto}
+.s-label{font-size:11px;font-weight:700;color:var(--acc2);letter-spacing:.22em;text-transform:uppercase;margin-bottom:10px;display:block}
+.s-title{font-size:clamp(22px,3.5vw,34px);font-weight:700;color:var(--text);line-height:1.15;letter-spacing:-.02em;margin-bottom:12px}
+.s-rule{width:40px;height:2px;background:var(--accent);margin-bottom:24px}
+.s-lead{font-size:16px;color:var(--muted);line-height:1.8;max-width:640px;margin-bottom:36px}
+.gen-table-wrap{overflow-x:auto}
+.gen-table{width:100%;border-collapse:collapse;font-size:13.5px}
+.gen-table thead th{background:var(--dark);color:var(--white);padding:12px 16px;text-align:left;font-weight:700;letter-spacing:.05em;font-size:12px;text-transform:uppercase}
+.gen-table tbody tr:nth-child(even) td{background:var(--warm)}
+.gen-table td{padding:11px 16px;border-bottom:1px solid var(--border);color:var(--text);line-height:1.5}
+.gen-table tfoot td{padding:11px 16px;font-size:12px;color:var(--muted);font-style:italic;border-top:2px solid var(--border)}
 
-/* ─── CRIOLLOS ───────────────────────────────────── */
-#criollos { background: var(--warm); }
-.criollos-header { max-width: 680px; margin-bottom: 56px; }
-.criollos-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
-.c-card {
-  background: var(--white); padding: 32px 28px;
+/* ─── ABERDEEN ANGUS ─── */
+.angus-section{background:var(--warm);padding:80px 32px}
+.angus-inner{max-width:1100px;margin:0 auto}
+.angus-header{max-width:700px;margin-bottom:48px}
+.angus-label-sub{font-size:12px;font-weight:700;color:var(--muted);letter-spacing:.16em;text-transform:uppercase;margin-bottom:4px}
+.angus-title-big{font-size:clamp(22px,3vw,32px);font-weight:700;color:var(--text);letter-spacing:-.02em;margin-bottom:12px}
+.angus-grid{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:start}
+.angus-text p{font-size:15.5px;color:#3a4050;line-height:1.85;margin-bottom:18px}
+/* photo placeholder — replaced when user provides photos */
+.photo-ph{
+  background:var(--border);border-radius:var(--r);
+  display:flex;align-items:center;justify-content:center;
+  color:var(--muted);font-size:13px;letter-spacing:.06em;text-transform:uppercase;
+  font-weight:600;border:2px dashed var(--line);
 }
-.c-card h3 { font-size: 15px; font-weight: 700; color: var(--text); margin-bottom: 10px; letter-spacing: -0.01em; }
-.c-card p  { font-size: 14px; color: var(--muted); line-height: 1.7; }
-.c-card-num { font-size: 11px; font-weight: 700; color: var(--line); letter-spacing: 0.1em; margin-bottom: 16px; }
-.criollos-history { margin-top: 56px; background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); padding: 48px; }
-.criollos-history h3 { font-size: 20px; font-weight: 700; color: var(--text); margin-bottom: 20px; letter-spacing: -0.02em; }
-.criollos-history p  { font-size: 15px; color: #3d4250; line-height: 1.85; margin-bottom: 18px; }
-.bloodlines { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 24px; padding-top: 24px; border-top: 1px solid var(--border); }
-.bl-tag {
-  font-size: 12px; color: var(--text); font-weight: 500;
-  padding: 5px 12px; border: 1px solid var(--border); border-radius: 3px;
-  background: var(--warm); letter-spacing: 0.02em;
-}
+.photo-ph.tall{height:340px}
+.photo-ph.sq  {height:220px}
+.photo-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.angus-photo-single{border-radius:var(--r);overflow:hidden}
+.angus-photo-single img{width:100%;height:340px;object-fit:cover}
+.angus-main-photo{border-radius:var(--r);overflow:hidden}
+.angus-main-photo img{width:100%;max-height:420px;object-fit:cover;display:block}
+/* extra fotos debajo del texto Aberdeen */
+.angus-bottom-photos{margin-top:48px;display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.angus-bottom-photos img{width:100%;height:220px;object-fit:cover;border-radius:var(--r);display:block}
+/* foto toro en sección genética */
+.gen-bull-photo{border-radius:var(--r);overflow:hidden;margin-top:20px}
+.gen-bull-photo img{width:100%;max-height:360px;object-fit:cover;display:block}
 
-/* ─── HISTORIA ───────────────────────────────────── */
-#historia { background: var(--white); }
-.historia-header { max-width: 680px; margin-bottom: 72px; }
-.timeline { position: relative; max-width: 800px; margin: 0 auto; }
-.timeline::before {
-  content: ''; position: absolute; left: 50%; top: 0; bottom: 0;
-  width: 1px; background: var(--border); transform: translateX(-50%);
-}
-.tl-item { display: grid; grid-template-columns: 1fr 1fr; position: relative; }
-.tl-item:nth-child(odd)  .tl-content { grid-column: 1; padding: 0 48px 52px 0; text-align: right; }
-.tl-item:nth-child(even) .tl-content { grid-column: 2; padding: 0 0 52px 48px; }
-.tl-item:nth-child(odd)  .tl-spacer  { grid-column: 2; }
-.tl-item:nth-child(even) .tl-spacer  { grid-column: 1; }
-.tl-dot {
-  position: absolute; left: 50%; top: 4px; width: 10px; height: 10px;
-  background: var(--white); border: 2px solid var(--accent);
-  border-radius: 50%; transform: translateX(-50%); z-index: 1;
-}
-.tl-year { font-size: 11px; font-weight: 700; color: var(--accent2); letter-spacing: 0.16em; text-transform: uppercase; margin-bottom: 8px; }
-.tl-content h4 { font-size: 16px; font-weight: 700; color: var(--text); margin-bottom: 8px; letter-spacing: -0.01em; }
-.tl-content p  { font-size: 14px; color: var(--muted); line-height: 1.7; }
-.historia-quote {
-  background: var(--dark); border-radius: var(--radius); padding: 56px 64px;
-  text-align: center; margin-top: 72px;
-}
-.historia-quote blockquote {
-  font-size: clamp(16px, 2vw, 20px); line-height: 1.75; font-style: italic;
-  color: rgba(255,255,255,0.8); max-width: 680px; margin: 0 auto 20px;
-  font-family: var(--font); font-weight: 400;
-}
-.historia-quote cite { font-size: 11px; color: rgba(255,255,255,0.35); font-style: normal; text-transform: uppercase; letter-spacing: 0.2em; font-weight: 600; }
+/* ─── ORIGEN DEL NOMBRE ─── */
+.origen{background:var(--white);padding:72px 32px}
+.origen-inner{max-width:900px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:start}
+.origen-text p{font-size:15.5px;color:#3a4050;line-height:1.85;margin-bottom:16px}
+.origen-quote{background:var(--dark);border-radius:var(--r);padding:40px;align-self:start}
+.origen-quote p{font-size:14px;color:rgba(255,255,255,.7);line-height:1.8;font-style:italic;font-family:var(--font)}
+.origen-quote cite{display:block;font-size:11px;color:rgba(255,255,255,.35);letter-spacing:.16em;text-transform:uppercase;font-style:normal;margin-top:14px;font-family:var(--sans)}
 
-/* ─── COMUNICACIÓN ───────────────────────────────── */
-#comunicacion { background: var(--warm); }
-.com-header { max-width: 680px; margin-bottom: 52px; }
-.videos-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
-.video-card {
-  background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden;
-  transition: box-shadow 0.25s, transform 0.25s;
-}
-.video-card:hover { box-shadow: var(--shadow); transform: translateY(-3px); }
-.video-thumb {
-  aspect-ratio: 16/9; background: var(--dark);
-  display: flex; align-items: center; justify-content: center; position: relative;
-}
-.video-bg { position: absolute; inset: 0; background: linear-gradient(135deg, #0d1b2a 0%, #17304f 100%); }
-.video-brand { position: absolute; font-size: 11px; font-weight: 600; color: rgba(255,255,255,0.12); letter-spacing: 0.12em; text-transform: uppercase; text-align: center; line-height: 1.5; padding: 0 16px; }
-.play-btn {
-  position: relative; width: 44px; height: 44px; background: rgba(255,255,255,0.12);
-  border: 1px solid rgba(255,255,255,0.2); border-radius: 50%;
-  display: flex; align-items: center; justify-content: center; z-index: 1;
-  transition: background 0.2s, border-color 0.2s;
-}
-.video-card:hover .play-btn { background: var(--accent); border-color: var(--accent); }
-.play-icon { width: 0; height: 0; border-top: 8px solid transparent; border-bottom: 8px solid transparent; border-left: 14px solid rgba(255,255,255,0.8); margin-left: 3px; }
-.video-card:hover .play-icon { border-left-color: var(--white); }
-.video-info { padding: 22px 24px; }
-.video-info h3 { font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 6px; line-height: 1.4; letter-spacing: -0.01em; }
-.video-info p  { font-size: 13px; color: var(--muted); line-height: 1.6; }
-.com-note { margin-top: 36px; padding: 20px 28px; background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); font-size: 14px; color: var(--muted); text-align: center; }
+/* ─── SECTIONS GENERIC ─── */
+.sec{padding:88px 32px}
+.sec-inner{max-width:1100px;margin:0 auto}
+.sec-w{max-width:1100px;margin:0 auto}
+.bg-warm{background:var(--warm)}
+.bg-white{background:var(--white)}
+.bg-dark{background:var(--dark)}
 
-/* ─── MAPA ───────────────────────────────────────── */
-#mapa { background: var(--white); }
-.mapa-grid { display: grid; grid-template-columns: 1fr 1.7fr; gap: 56px; align-items: start; margin-top: 52px; }
-.mapa-detail { padding: 20px 0; border-bottom: 1px solid var(--border); }
-.mapa-detail:first-child { padding-top: 0; }
-.mapa-detail:last-of-type { border-bottom: none; }
-.mapa-detail .lbl { font-size: 10px; font-weight: 700; color: var(--muted); letter-spacing: 0.18em; text-transform: uppercase; margin-bottom: 4px; }
-.mapa-detail .val { font-size: 16px; color: var(--text); font-weight: 500; line-height: 1.4; }
-.mapa-cta {
-  display: inline-block; margin-top: 28px; background: var(--dark); color: var(--white);
-  font-size: 12px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase;
-  padding: 14px 28px; border-radius: var(--radius); transition: background 0.2s;
-}
-.mapa-cta:hover { background: var(--navy); }
-.map-embed { border-radius: var(--radius); overflow: hidden; border: 1px solid var(--border); }
-.map-embed iframe { display: block; width: 100%; height: 420px; border: none; }
+/* ─── GENÉTICA ─── */
+.gen-grid{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:start;margin-top:48px}
+.gen-text p{font-size:15.5px;color:#3a4050;line-height:1.85;margin-bottom:18px}
+.gen-callout{background:var(--dark);border-radius:var(--r);padding:32px 36px;margin-top:28px}
+.gen-callout h3{font-size:11px;font-weight:700;color:rgba(255,255,255,.4);letter-spacing:.2em;text-transform:uppercase;margin-bottom:12px}
+.gen-callout p{font-size:15px;color:rgba(255,255,255,.75);line-height:1.75;font-weight:300}
+.cards-stack{display:flex;flex-direction:column;gap:1px;border:1px solid var(--border);border-radius:var(--r);overflow:hidden}
+.gcard{background:var(--white);padding:24px 26px;border-bottom:1px solid var(--border)}
+.gcard:last-child{border-bottom:none}
+.gcard-label{font-size:10px;font-weight:700;color:var(--acc2);letter-spacing:.2em;text-transform:uppercase;margin-bottom:6px}
+.gcard h3{font-size:15px;font-weight:700;color:var(--text);margin-bottom:7px}
+.gcard p{font-size:13.5px;color:var(--muted);line-height:1.65}
+.gcard .bnum{font-size:38px;font-weight:700;color:var(--dark);line-height:1;letter-spacing:-.04em;margin-bottom:4px}
+.results-box{background:var(--accent);border-radius:var(--r);padding:32px;margin-top:18px}
+.results-box .rlabel{font-size:10px;font-weight:700;color:rgba(255,255,255,.45);letter-spacing:.2em;text-transform:uppercase;margin-bottom:8px}
+.results-box .rcycle{font-size:17px;font-weight:600;color:var(--white);margin-bottom:22px;line-height:1.4}
+.metrics{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px}
+.metric{background:rgba(0,0,0,.18);border-radius:4px;padding:16px;text-align:center}
+.metric .mval{font-size:26px;font-weight:700;color:var(--white);line-height:1}
+.metric .mlbl{font-size:11px;color:rgba(255,255,255,.5);margin-top:4px;text-transform:uppercase;letter-spacing:.08em}
+.results-box ul{list-style:none}
+.results-box ul li{font-size:13.5px;color:rgba(255,255,255,.72);padding:5px 0 5px 16px;position:relative;line-height:1.5}
+.results-box ul li::before{content:'—';position:absolute;left:0;color:rgba(255,255,255,.3)}
 
-/* ─── CONTACTO ───────────────────────────────────── */
-#contacto { background: var(--dark); }
-#contacto .section-label { color: rgba(255,255,255,0.35); }
-#contacto .section-title { color: var(--white); }
-#contacto .section-rule  { background: var(--accent); }
-.contacto-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: start; margin-top: 52px; }
-.contacto-info { color: rgba(255,255,255,0.65); }
-.contacto-info .intro { font-size: 16px; line-height: 1.8; margin-bottom: 36px; font-weight: 300; }
-.c-detail { padding: 18px 0; border-bottom: 1px solid rgba(255,255,255,0.07); }
-.c-detail:last-of-type { border-bottom: none; }
-.c-detail .lbl { font-size: 10px; font-weight: 700; color: rgba(255,255,255,0.3); letter-spacing: 0.18em; text-transform: uppercase; margin-bottom: 4px; }
-.c-detail .val { font-size: 16px; color: var(--white); font-weight: 500; }
-.contacto-form { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: var(--radius); padding: 40px; }
-.contacto-form h3 { font-size: 16px; font-weight: 700; color: var(--white); margin-bottom: 28px; letter-spacing: -0.01em; }
-.f-group { margin-bottom: 16px; }
-.f-row  { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-.f-label { display: block; font-size: 10px; font-weight: 700; color: rgba(255,255,255,0.4); letter-spacing: 0.16em; text-transform: uppercase; margin-bottom: 6px; }
-.f-input, .f-textarea {
-  width: 100%; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);
-  border-radius: 4px; color: var(--white); padding: 11px 14px; font-size: 14px;
-  font-family: var(--sans); outline: none; transition: border-color 0.2s;
-}
-.f-input:focus, .f-textarea:focus { border-color: rgba(255,255,255,0.3); }
-.f-input::placeholder, .f-textarea::placeholder { color: rgba(255,255,255,0.2); }
-.f-textarea { resize: vertical; min-height: 120px; }
-.f-submit {
-  width: 100%; background: var(--accent); color: var(--white); font-size: 12px;
-  font-weight: 700; padding: 14px; border-radius: var(--radius); border: none;
-  cursor: pointer; letter-spacing: 0.14em; text-transform: uppercase; margin-top: 10px;
-  transition: background 0.2s; font-family: var(--sans);
-}
-.f-submit:hover { background: var(--accent2); }
-.f-success {
-  display: none; background: rgba(46,83,57,0.3); border: 1px solid rgba(46,83,57,0.5);
-  border-radius: 4px; padding: 12px 16px; color: #a3d4b0; font-size: 14px;
-  text-align: center; margin-top: 12px;
-}
+/* ─── CRIOLLOS ─── */
+.criollos-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;margin-top:48px}
+.ccrd{background:var(--white);padding:28px 26px}
+.ccrd-n{font-size:11px;font-weight:700;color:var(--line);letter-spacing:.1em;margin-bottom:14px}
+.ccrd h3{font-size:15px;font-weight:700;color:var(--text);margin-bottom:8px}
+.ccrd p{font-size:13.5px;color:var(--muted);line-height:1.7}
+.criollos-hist{margin-top:48px;background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:44px}
+.criollos-hist h3{font-size:19px;font-weight:700;color:var(--text);margin-bottom:18px;letter-spacing:-.01em}
+.criollos-hist p{font-size:15px;color:#3a4050;line-height:1.85;margin-bottom:16px}
+.btags{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px;padding-top:20px;border-top:1px solid var(--border)}
+.btag{font-size:12px;color:var(--text);font-weight:500;padding:5px 12px;border:1px solid var(--border);border-radius:3px;background:var(--warm);letter-spacing:.02em}
 
-/* ─── FOOTER ─────────────────────────────────────── */
-footer { background: #080f18; border-top: 1px solid rgba(255,255,255,0.05); padding: 36px 32px; }
-.footer-inner { max-width: 1100px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 24px; flex-wrap: wrap; }
-.footer-brand { display: flex; align-items: center; gap: 12px; }
-.footer-logo { height: 28px; width: auto; color: rgba(255,255,255,0.5); }
-.footer-name { font-size: 13px; color: rgba(255,255,255,0.4); font-weight: 400; letter-spacing: 0.06em; }
-.footer-name strong { color: rgba(255,255,255,0.65); font-weight: 600; }
-.footer-links { display: flex; gap: 24px; flex-wrap: wrap; }
-.footer-links a { color: rgba(255,255,255,0.3); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 500; transition: color 0.2s; }
-.footer-links a:hover { color: rgba(255,255,255,0.65); }
-.footer-copy { font-size: 11px; color: rgba(255,255,255,0.2); }
+/* ─── HISTORIA TIMELINE ─── */
+.tl{position:relative;max-width:820px;margin:48px auto 0}
+.tl::before{content:'';position:absolute;left:50%;top:0;bottom:0;width:1px;background:var(--border);transform:translateX(-50%)}
+.tli{display:grid;grid-template-columns:1fr 1fr;position:relative}
+.tli:nth-child(odd)  .tic{grid-column:1;padding:0 44px 48px 0;text-align:right}
+.tli:nth-child(even) .tic{grid-column:2;padding:0 0 48px 44px}
+.tli:nth-child(odd)  .tisp{grid-column:2}
+.tli:nth-child(even) .tisp{grid-column:1}
+.tdot{position:absolute;left:50%;top:4px;width:10px;height:10px;background:var(--white);border:2px solid var(--accent);border-radius:50%;transform:translateX(-50%);z-index:1}
+.tiyr{font-size:11px;font-weight:700;color:var(--acc2);letter-spacing:.16em;text-transform:uppercase;margin-bottom:7px}
+.tic h4{font-size:15.5px;font-weight:700;color:var(--text);margin-bottom:7px;letter-spacing:-.01em}
+.tic p{font-size:13.5px;color:var(--muted);line-height:1.7}
+.hist-quote{background:var(--dark);border-radius:var(--r);padding:52px 60px;text-align:center;margin-top:64px}
+.hist-quote blockquote{font-size:clamp(15px,2vw,19px);line-height:1.75;font-style:italic;color:rgba(255,255,255,.82);max-width:680px;margin:0 auto 18px;font-family:var(--font)}
+.hist-quote cite{font-size:11px;color:rgba(255,255,255,.32);font-style:normal;text-transform:uppercase;letter-spacing:.2em;font-weight:600}
 
-/* ─── REVEAL ─────────────────────────────────────── */
-.reveal { opacity: 0; transform: translateY(20px); transition: opacity 0.65s ease, transform 0.65s ease; }
-.reveal.visible { opacity: 1; transform: translateY(0); }
+/* ─── COMUNICACIÓN ─── */
+.vid-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:48px}
+.vcrd{background:var(--white);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;transition:box-shadow .25s,transform .25s}
+.vcrd:hover{box-shadow:var(--sh);transform:translateY(-3px)}
+.vthumb{aspect-ratio:16/9;background:var(--dark);display:flex;align-items:center;justify-content:center;position:relative}
+.vbg{position:absolute;inset:0;background:linear-gradient(135deg,#0d1b2a 0%,#17304f 100%)}
+.vbrand{position:absolute;font-size:11px;font-weight:600;color:rgba(255,255,255,.12);letter-spacing:.12em;text-transform:uppercase;text-align:center;padding:0 16px;line-height:1.5}
+.vplay{position:relative;width:42px;height:42px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:50%;display:flex;align-items:center;justify-content:center;z-index:1;transition:background .2s,border-color .2s}
+.vcrd:hover .vplay{background:var(--accent);border-color:var(--accent)}
+.varrow{width:0;height:0;border-top:7px solid transparent;border-bottom:7px solid transparent;border-left:13px solid rgba(255,255,255,.8);margin-left:3px}
+.vcrd:hover .varrow{border-left-color:var(--white)}
+.vinfo{padding:20px 22px}
+.vinfo h3{font-size:13.5px;font-weight:700;color:var(--text);margin-bottom:5px;line-height:1.4;letter-spacing:-.01em}
+.vinfo p{font-size:13px;color:var(--muted);line-height:1.55}
 
-/* ─── RESPONSIVE ─────────────────────────────────── */
-@media (max-width: 960px) {
-  .gen-grid { grid-template-columns: 1fr; }
-  .criollos-grid { grid-template-columns: 1fr 1fr; }
-  .videos-grid { grid-template-columns: 1fr 1fr; }
-  .mapa-grid { grid-template-columns: 1fr; }
-  .contacto-grid { grid-template-columns: 1fr; }
-  .timeline::before { left: 20px; }
-  .tl-item { grid-template-columns: 1fr; padding-left: 48px; }
-  .tl-item:nth-child(odd) .tl-content,
-  .tl-item:nth-child(even) .tl-content { grid-column: 1; padding: 0 0 40px 0; text-align: left; }
-  .tl-item .tl-spacer { display: none; }
-  .tl-dot { left: 20px; }
+/* ─── MAPA ─── */
+.mapa-grid{display:grid;grid-template-columns:1fr 1.8fr;gap:48px;align-items:start;margin-top:48px}
+.mdet{padding:18px 0;border-bottom:1px solid var(--border)}
+.mdet:last-of-type{border-bottom:none}
+.mdet .ml{font-size:10px;font-weight:700;color:var(--muted);letter-spacing:.18em;text-transform:uppercase;margin-bottom:4px}
+.mdet .mv{font-size:15.5px;color:var(--text);font-weight:500;line-height:1.4}
+.mapa-cta{display:inline-block;margin-top:24px;background:var(--dark);color:var(--white);font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;padding:13px 26px;border-radius:var(--r);transition:background .2s}
+.mapa-cta:hover{background:var(--navy)}
+.map-box{border-radius:var(--r);overflow:hidden;border:1px solid var(--border)}
+.map-box iframe{display:block;width:100%;height:420px;border:none}
+
+/* ─── CONTACTO ─── */
+.ctgrid{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:start;margin-top:48px}
+.ctinfo{color:rgba(255,255,255,.7)}
+.ctinfo .intro{font-size:16px;line-height:1.85;margin-bottom:32px;font-weight:300}
+.cdtl{padding:16px 0;border-bottom:1px solid rgba(255,255,255,.07)}
+.cdtl:last-of-type{border-bottom:none}
+.cdtl .cl{font-size:10px;font-weight:700;color:rgba(255,255,255,.3);letter-spacing:.18em;text-transform:uppercase;margin-bottom:4px}
+.cdtl .cv{font-size:15.5px;color:var(--white);font-weight:500}
+.ctform{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:var(--r);padding:38px}
+.ctform h3{font-size:15px;font-weight:700;color:var(--white);margin-bottom:24px;letter-spacing:-.01em}
+.fg{margin-bottom:14px}
+.frow{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.fl{display:block;font-size:10px;font-weight:700;color:rgba(255,255,255,.38);letter-spacing:.16em;text-transform:uppercase;margin-bottom:5px}
+.fi,.fta{width:100%;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:4px;color:var(--white);padding:10px 13px;font-size:14px;font-family:var(--sans);outline:none;transition:border-color .2s}
+.fi:focus,.fta:focus{border-color:rgba(255,255,255,.3)}
+.fi::placeholder,.fta::placeholder{color:rgba(255,255,255,.2)}
+.fta{resize:vertical;min-height:110px}
+.fsub{width:100%;background:var(--accent);color:var(--white);font-size:12px;font-weight:700;padding:13px;border-radius:var(--r);border:none;cursor:pointer;letter-spacing:.14em;text-transform:uppercase;margin-top:10px;transition:background .2s;font-family:var(--sans)}
+.fsub:hover{background:var(--acc2)}
+.fok{display:none;background:rgba(46,83,57,.3);border:1px solid rgba(46,83,57,.5);border-radius:4px;padding:12px;color:#a3d4b0;font-size:13.5px;text-align:center;margin-top:10px}
+
+/* ─── FOOTER ─── */
+footer{background:#080f18;border-top:1px solid rgba(255,255,255,.05);padding:34px 32px}
+.ft-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap}
+.ft-brand{display:flex;align-items:center;gap:10px}
+.ft-logo{height:26px;width:auto;color:rgba(255,255,255,.4)}
+.ft-name{font-size:13px;color:rgba(255,255,255,.38);font-weight:400}
+.ft-name strong{color:rgba(255,255,255,.62);font-weight:600}
+.ft-links{display:flex;gap:20px;flex-wrap:wrap}
+.ft-links a{color:rgba(255,255,255,.3);font-size:11px;letter-spacing:.12em;text-transform:uppercase;font-weight:500;transition:color .2s}
+.ft-links a:hover{color:rgba(255,255,255,.65)}
+.ft-copy{font-size:11px;color:rgba(255,255,255,.2)}
+
+/* ─── REVEAL ─── */
+.rv{opacity:0;transform:translateY(18px);transition:opacity .6s ease,transform .6s ease}
+.rv.on{opacity:1;transform:translateY(0)}
+
+/* ─── RESPONSIVE ─── */
+@media(max-width:980px){
+  .intro-strip-inner,.angus-grid,.origen-inner,.gen-grid,.mapa-grid,.ctgrid{grid-template-columns:1fr}
+  .criollos-grid,.vid-grid{grid-template-columns:1fr 1fr}
+  .tl::before{left:20px}
+  .tli{grid-template-columns:1fr;padding-left:44px}
+  .tli:nth-child(odd) .tic,.tli:nth-child(even) .tic{grid-column:1;padding:0 0 40px 0;text-align:left}
+  .tli .tisp{display:none}
+  .tdot{left:20px}
+  .hist-quote{padding:36px 28px}
 }
-@media (max-width: 720px) {
-  section { padding: 72px 20px; }
-  .nav-inner { padding: 0 20px; }
-  .nav-links { display: none; }
-  .hamburger { display: flex; }
-  .criollos-grid { grid-template-columns: 1fr; }
-  .videos-grid { grid-template-columns: 1fr; }
-  .hero-stats { gap: 32px; }
-  .historia-quote { padding: 40px 28px; }
-  .footer-inner { flex-direction: column; text-align: center; }
-  .footer-links { justify-content: center; }
+@media(max-width:720px){
+  .sec,.origen,.angus-section,.resultados,.intro-strip,.video-strip{padding:60px 20px}
+  .nav-inner{padding:0 20px}
+  .nav-links{display:none}
+  .hamburger{display:flex}
+  .criollos-grid,.vid-grid{grid-template-columns:1fr}
+  .photo-grid{grid-template-columns:1fr}
+  .ft-inner{flex-direction:column;text-align:center}
+  .ft-links{justify-content:center}
+  .criollos-hist{padding:28px 22px}
+  .ctform{padding:28px 22px}
 }
-@media (max-width: 480px) {
-  .hero-btns { flex-direction: column; align-items: center; }
-  .btn-primary, .btn-outline { width: 100%; max-width: 280px; text-align: center; }
-  .f-row { grid-template-columns: 1fr; }
-  .results-metrics { grid-template-columns: 1fr 1fr; }
-  .criollos-history { padding: 28px 24px; }
-  .contacto-form { padding: 28px 24px; }
+@media(max-width:480px){
+  .frow{grid-template-columns:1fr}
+  .metrics{grid-template-columns:1fr 1fr}
+  .hero-title{font-size:clamp(26px,8vw,48px)}
 }
 </style>
 </head>
 <body>
 
-<!-- ══ LOGO SVG SYMBOL (reusable) ══════════════════ -->
+<!-- LOGO SVG reutilizable ─────────────────────────── -->
 <svg style="display:none" xmlns="http://www.w3.org/2000/svg">
-  <symbol id="logo-mark" viewBox="0 0 60 74">
+  <symbol id="ico" viewBox="0 0 60 70">
+    <!--
+      Doble arco: picos en (16,2) y (44,2), valle en (30,24),
+      cuerpo hasta y=68. Stroke-only, sin relleno.
+    -->
     <path
-      d="M30 70 C34 72 40 72 44 70 C52 66 56 58 56 50 L56 34
-         C56 26 54 18 50 12 C47 8 44 4 42 4
-         C40 4 38 6 36 10 C34 14 32 16 30 16
-         C28 16 26 14 24 10 C22 6 20 4 18 4
-         C16 4 13 8 10 12 C6 18 4 26 4 34
-         L4 50 C4 58 8 66 16 70 C20 72 26 72 30 70 Z"
-      fill="none" stroke="currentColor" stroke-width="3"
-      stroke-linecap="round" stroke-linejoin="round"
+      d="M30 66
+         C36 68 44 68 50 64
+         C56 60 58 52 58 42
+         L58 32
+         C58 24 56 16 52 10
+         C49 5 46 2 44 2
+         C42 2 40 6 38 12
+         C36 18 34 22 30 24
+         C26 22 24 18 22 12
+         C20 6 18 2 16 2
+         C14 2 11 5 8 10
+         C4 16 2 24 2 32
+         L2 42
+         C2 52 4 60 10 64
+         C16 68 24 68 30 66
+         Z"
+      fill="none" stroke="currentColor"
+      stroke-width="3" stroke-linecap="round" stroke-linejoin="round"
     />
   </symbol>
 </svg>
@@ -387,12 +319,10 @@ footer { background: #080f18; border-top: 1px solid rgba(255,255,255,0.05); padd
 <header>
   <div class="nav-inner">
     <div class="nav-brand">
-      <svg class="nav-logo" viewBox="0 0 60 74" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <use href="#logo-mark"/>
-      </svg>
-      <div class="nav-brand-name">
+      <svg class="nav-logo" viewBox="0 0 60 70" fill="none" xmlns="http://www.w3.org/2000/svg"><use href="#ico"/></svg>
+      <div class="nav-name">
         Curupy del Salvador
-        <span>Aberdeen Angus &middot; Uruguay</span>
+        <small>Aberdeen Angus &middot; Uruguay</small>
       </div>
     </div>
     <nav class="nav-links">
@@ -408,139 +338,217 @@ footer { background: #080f18; border-top: 1px solid rgba(255,255,255,0.05); padd
       <span></span><span></span><span></span>
     </button>
   </div>
-  <nav class="mobile-nav" id="mobileNav">
-    <a href="#inicio"       onclick="closeMenu()">Inicio</a>
-    <a href="#genetica"     onclick="closeMenu()">Gen&eacute;tica</a>
-    <a href="#criollos"     onclick="closeMenu()">Criollos</a>
-    <a href="#historia"     onclick="closeMenu()">Historia</a>
-    <a href="#comunicacion" onclick="closeMenu()">Comunicaci&oacute;n</a>
-    <a href="#mapa"         onclick="closeMenu()">Mapa</a>
-    <a href="#contacto"     onclick="closeMenu()">Contacto</a>
+  <nav class="mob-nav" id="mobNav">
+    <a href="#inicio"       onclick="cx()">Inicio</a>
+    <a href="#genetica"     onclick="cx()">Gen&eacute;tica</a>
+    <a href="#criollos"     onclick="cx()">Criollos</a>
+    <a href="#historia"     onclick="cx()">Historia</a>
+    <a href="#comunicacion" onclick="cx()">Comunicaci&oacute;n</a>
+    <a href="#mapa"         onclick="cx()">Mapa</a>
+    <a href="#contacto"     onclick="cx()">Contacto</a>
   </nav>
 </header>
 
 <!-- ══ INICIO ════════════════════════════════════════ -->
-<section id="inicio" class="hero">
-  <div class="hero-logo-wrap">
-    <svg class="hero-logo-icon" viewBox="0 0 60 74" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <use href="#logo-mark"/>
-    </svg>
-    <div class="hero-logo-name">Curupy del Salvador</div>
-  </div>
-  <div class="hero-rule"></div>
-  <p class="hero-tagline">Aberdeen Angus &nbsp;&middot;&nbsp; Dolores, Soriano, Uruguay</p>
-  <p class="hero-desc">
-    Gen&eacute;tica bovina de alta calidad con amplia base y gran presi&oacute;n de selecci&oacute;n.
-    Producimos ganados d&uacute;ctiles, capaces de adaptarse a diferentes ambientes,
-    condiciones y contingencias productivas.
-  </p>
-  <div class="hero-btns">
-    <a href="#genetica" class="btn-primary">Conocer gen&eacute;tica</a>
-    <a href="#contacto" class="btn-outline">Contactarnos</a>
-  </div>
-  <div class="hero-stats">
-    <div class="stat">
-      <div class="stat-num">15.500+</div>
-      <div class="stat-lbl">Animales evaluados</div>
-    </div>
-    <div class="stat">
-      <div class="stat-num">60</div>
-      <div class="stat-lbl">A&ntilde;os de cr&iacute;a Angus</div>
-    </div>
-    <div class="stat">
-      <div class="stat-num">5&thinsp;%</div>
-      <div class="stat-lbl">Poblaci&oacute;n nacional</div>
-    </div>
-    <div class="stat">
-      <div class="stat-num">1,94&thinsp;kg</div>
-      <div class="stat-lbl">Ganancia diaria promedio</div>
-    </div>
-  </div>
-</section>
+<div id="inicio">
 
-<!-- ══ GENÉTICA ══════════════════════════════════════ -->
-<section id="genetica">
-  <div class="section-inner">
-    <div class="reveal">
-      <span class="section-label">Mejoramiento gen&eacute;tico</span>
-      <h2 class="section-title">Eficiencia al proceso productivo<br>y valor al producto final</h2>
-      <div class="section-rule"></div>
-      <p class="section-lead">
-        La rentabilidad es una elecci&oacute;n y no fruto del azar. La acumulaci&oacute;n y an&aacute;lisis cient&iacute;fico
-        de datos nos se&ntilde;ala que la precisi&oacute;n en gen&eacute;tica de producci&oacute;n es el camino a recorrer.
-      </p>
+  <!-- Hero banner -->
+  <div class="hero-banner">
+    <!-- Foto 1: rodeo Angus con caballos al fondo -->
+    <img class="hero-img" src="images/hero-hacienda.jpg" alt="Rodeo Aberdeen Angus — Curupy del Salvador" onerror="this.style.display='none'">
+    <div class="hero-img-placeholder"></div>
+    <div class="hero-overlay"></div>
+    <div class="hero-text">
+      <div class="hero-eyebrow">Curupy del Salvador &mdash; Dolores, Soriano, Uruguay</div>
+      <h1 class="hero-title">gen&eacute;tica<br><em>de producci&oacute;n</em></h1>
+      <div class="hero-rule"></div>
+    </div>
+  </div>
+
+  <!-- Dos bloques de texto -->
+  <div class="intro-strip">
+    <div class="intro-strip-inner rv">
+      <div class="intro-card">
+        <svg class="intro-icon" viewBox="0 0 60 70" fill="none" xmlns="http://www.w3.org/2000/svg"><use href="#ico"/></svg>
+        <p>Curupy del Salvador se mantiene a la vanguardia del mejoramiento gen&eacute;tico, con valores objetivos que hablan por s&iacute; mismos.</p>
+      </div>
+      <div class="intro-card">
+        <svg class="intro-icon" viewBox="0 0 60 70" fill="none" xmlns="http://www.w3.org/2000/svg"><use href="#ico"/></svg>
+        <p>La <strong>presi&oacute;n selectiva</strong> constante resulta en animales vers&aacute;tiles, adaptables y f&aacute;ciles de mantener, que siguen mejorando a&ntilde;o a a&ntilde;o.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Video -->
+  <div class="video-strip">
+    <div class="video-strip-inner rv">
+      <div class="yt-wrap">
+        <!--
+          Reemplazar VIDEO_ID por el ID del video de YouTube.
+          Ej: si la URL es youtube.com/watch?v=abc123, usar src="https://www.youtube.com/embed/abc123"
+        -->
+        <iframe
+          src="https://www.youtube.com/embed/videoseries?list=PLz0Qa6pCHJHmfSvhDk9hm8dOkp-lLmxlh"
+          title="Curupy del Salvador"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowfullscreen>
+        </iframe>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mejoramiento genético — resultados 2019 -->
+  <div class="resultados">
+    <div class="resultados-inner rv">
+      <span class="s-label">Mejoramiento gen&eacute;tico</span>
+      <h2 class="s-title">Los <strong>consistentes resultados</strong> de la generaci&oacute;n 2019 han confirmado que estamos siguiendo la <strong>direcci&oacute;n correcta</strong></h2>
+      <div class="s-rule"></div>
+
+      <div class="gen-table-wrap">
+        <table class="gen-table">
+          <thead>
+            <tr>
+              <th colspan="5">CURUPY GENERACI&Oacute;N 2019</th>
+            </tr>
+            <tr>
+              <th>Caracter&iacute;stica</th>
+              <th>DEP</th>
+              <th>Acc.</th>
+              <th>%Raza</th>
+              <th>Observaci&oacute;n</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!--
+              DATOS DE LA TABLA: completar con los valores reales de la tabla
+              "CURUPY GENERACIÓN 2019" que figura en el sitio original.
+            -->
+            <tr><td colspan="5" style="text-align:center;color:var(--muted);font-style:italic;padding:20px">Completar con los datos de la tabla Generaci&oacute;n 2019</td></tr>
+          </tbody>
+          <tfoot>
+            <tr><td colspan="5">Fuente: datos internos de evaluaci&oacute;n gen&eacute;tica de Curupy del Salvador</td></tr>
+          </tfoot>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Aberdeen Angus — La nobleza de la raza -->
+  <div class="angus-section">
+    <div class="angus-inner">
+      <div class="angus-header rv">
+        <div class="angus-label-sub">Aberdeen Angus</div>
+        <h2 class="angus-title-big">LA NOBLEZA DE LA RAZA</h2>
+        <div class="s-rule"></div>
+      </div>
+
+      <div class="angus-grid rv">
+        <div class="angus-text">
+          <p>El Angus es la raza vacuna de excelencia productora de carne de calidad. Su carne se destaca por su terneza y sabor debido a su caracter&iacute;stico marmoreo (grasa intramuscular).</p>
+          <p>De apariencia inconfundible, mochos, con pelaje que puede negro o colorado manteniendo ambos las mismas caracter&iacute;sticas raciales. Son excelentes madres que se caracterizan por la facilidad de parto, fertilidad y longevidad. Son animales muy r&uacute;sticos que se adaptan f&aacute;cilmente a las diferentes climas, suelos y condiciones alimenticias, siendo su respuesta excelente en situaciones adversas.</p>
+          <p>La suma de estos atributos ya sea como raza pura o cruzamiento, ha llevado a que el Angus sea una de las razas de m&aacute;s relevancia por su calidad inigualable de carne, valorada en todos los mercados, particularmente en los m&aacute;s exigentes.</p>
+        </div>
+        <div>
+          <!-- Foto 2: collage gauchos + rodeo Angus -->
+          <div class="angus-main-photo">
+            <img src="images/hacienda-gauchos.jpg" alt="Gauchos arreando hacienda Aberdeen Angus — Curupy del Salvador" onerror="this.parentElement.style.display='none'">
+          </div>
+        </div>
+      </div>
+    </div>
+
+      <!-- Fotos 4 y 5 + hero repetido como galería baja -->
+      <div class="angus-bottom-photos rv">
+        <img src="images/campo-aereo.jpg"   alt="Hacienda en el campo — Curupy del Salvador" onerror="this.style.display='none'">
+        <img src="images/hero-hacienda.jpg" alt="Rodeo Aberdeen Angus — Curupy del Salvador" onerror="this.style.display='none'">
+        <img src="images/campo-gauchos.jpg" alt="Gauchos en el campo — Curupy del Salvador" onerror="this.style.display='none'">
+      </div>
+  </div>
+  </div>
+
+  <!-- Curupy — Origen del nombre -->
+  <div class="origen">
+    <div class="origen-inner rv">
+      <div>
+        <span class="s-label">Curupy</span>
+        <h2 class="s-title" style="margin-bottom:20px">ORIGEN DEL NOMBRE</h2>
+        <div class="s-rule"></div>
+        <div class="origen-text">
+          <p>Su nombre viene de su costa sobre el R&iacute;o San Salvador desde la desembocadura del Arroyo Bizcocho hasta la desembocadura en el Uruguay, donde abunda &ldquo;el curupy&rdquo; (<em>Sapium haematospermum</em>), una especie arb&oacute;rea perteneciente a la familia Euphorbiaceae.</p>
+          <p>&ldquo;Kurupika&rdquo;, &ldquo;Curup&iacute;&rdquo;, &ldquo;curup&rdquo;, &ldquo;curupi-ca&rdquo;, &ldquo;curupicy&rdquo;, &ldquo;Kurupi&rdquo;, &ldquo;l&eacute;chron&rdquo;, &ldquo;palo leche&rdquo;, &ldquo;pega-pega&rdquo;, &ldquo;filyi-filyi&rdquo;, &ldquo;punua&rdquo;&hellip; &ldquo;curupy&rdquo; es la versi&oacute;n argentina del &aacute;rbol del caucho <em>Hevea brasiliensis</em>.</p>
+        </div>
+      </div>
+      <div class="origen-quote">
+        <p>&ldquo;Una tierra sobre el R&iacute;o San Salvador donde abunda el curupy &mdash;especie arb&oacute;rea de la familia Euphorbiaceae&mdash;, entre la desembocadura del Arroyo Bizcocho y el R&iacute;o Uruguay.&rdquo;</p>
+        <cite>Origen del nombre &mdash; Curupy del Salvador</cite>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /#inicio -->
+
+<!-- ══ GENÉTICA ═══════════════════════════════════════ -->
+<section id="genetica" class="sec bg-white">
+  <div class="sec-inner">
+    <div class="rv">
+      <span class="s-label">Mejoramiento gen&eacute;tico</span>
+      <h2 class="s-title">Eficiencia al proceso productivo<br>y valor al producto final</h2>
+      <div class="s-rule"></div>
+      <p class="s-lead" style="margin-bottom:0">La rentabilidad es una elecci&oacute;n y no fruto del azar. La acumulaci&oacute;n y an&aacute;lisis cient&iacute;fico de datos nos se&ntilde;ala que la precisi&oacute;n en gen&eacute;tica de producci&oacute;n es el camino a recorrer.</p>
     </div>
 
     <div class="gen-grid">
-      <div class="gen-text reveal">
-        <p>
-          En Curupy del Salvador desarrollamos un programa gen&eacute;tico con amplia base y gran presi&oacute;n de
-          selecci&oacute;n, poniendo &eacute;nfasis en la fertilidad, rusticidad, peso y carcasa. Nuestro objetivo
-          es la producci&oacute;n de ganados con gen&eacute;tica d&uacute;ctil, capaces de adaptarse bien a diferentes
-          ambientes, condiciones y contingencias productivas.
-        </p>
-        <p>
-          La incorporaci&oacute;n constante de tecnolog&iacute;a nos ha marcado que la precisi&oacute;n en gen&eacute;tica
-          de producci&oacute;n es el camino a recorrer. Mantener el balance adecuado entre la vaca y el novillo;
-          la cr&iacute;a y la invernada; las cualidades maternas y la eficiencia y calidad de res contin&uacute;a
-          siendo el gran desaf&iacute;o.
-        </p>
-        <p>
-          Todas las etapas &mdash;cr&iacute;a, recr&iacute;a, engorde en nuestras praderas y corrales&mdash; funcionan
-          cada vez mejor. Y aquello que funciona bien para nosotros ha funcionado bien para nuestros clientes,
-          por lo que podemos ofrecerlo con mucha confianza.
-        </p>
+      <div class="gen-text rv">
+        <p>En Curupy del Salvador desarrollamos un programa gen&eacute;tico con amplia base y gran presi&oacute;n de selecci&oacute;n, poniendo &eacute;nfasis en la fertilidad, rusticidad, peso y carcasa. Nuestro objetivo es la producci&oacute;n de ganados con gen&eacute;tica d&uacute;ctil, capaces de adaptarse bien a diferentes ambientes, condiciones y contingencias productivas.</p>
+        <p>La acumulaci&oacute;n y an&aacute;lisis cient&iacute;fico de datos y la incorporaci&oacute;n constante de tecnolog&iacute;a nos han marcado que la precisi&oacute;n en gen&eacute;tica de producci&oacute;n es el camino a recorrer. Mantener el balance adecuado entre la vaca y el novillo; la cr&iacute;a y la invernada; las cualidades maternas y la eficiencia y calidad de res contin&uacute;a siendo el gran desaf&iacute;o.</p>
+        <p>Para Curupy del Salvador la rentabilidad es una elecci&oacute;n y no fruto del azar. Medimos la rentabilidad reproductiva, el comportamiento materno, el crecimiento, la eficiencia de conversi&oacute;n y la calidad de res finalmente lograda. Todas las etapas &mdash;cr&iacute;a, recr&iacute;a, engorde en nuestras praderas y corrales&mdash; funcionan cada vez mejor.</p>
+        <p>Y aquello que funciona bien para nosotros ha funcionado bien para nuestros clientes, por lo que podemos ofrecerlo con mucha confianza.</p>
         <div class="gen-callout">
           <h3>Pedigri Inscripto &amp; Puro Controlado</h3>
-          <p>
-            El plantel de Curupy del Salvador se trabaja como uno solo, con dos categor&iacute;as distintas.
-            Entre estas dos poblaciones evaluadas, contamos con m&aacute;s de 15.500 animales en una
-            poblaci&oacute;n nacional de 190.000 &mdash;el 5&thinsp;% del total.
-          </p>
+          <p>El plantel de Curupy del Salvador se trabaja como uno solo, pero tiene dos categor&iacute;as distintas: Pedigri inscripto y Puro Controlado. Entre estas dos poblaciones evaluadas, Curupy del Salvador tiene m&aacute;s de 15.500 animales evaluados en una poblaci&oacute;n nacional de 190.000 animales, lo que representa el 5&thinsp;% de la poblaci&oacute;n total.</p>
         </div>
       </div>
 
-      <div class="reveal">
-        <div class="gen-cards">
-          <div class="g-card">
-            <div class="g-card-label">Escala</div>
-            <div class="big-num">15.500</div>
+      <div class="rv">
+        <div class="cards-stack">
+          <div class="gcard">
+            <div class="gcard-label">Escala</div>
+            <div class="bnum">15.500</div>
             <h3>Animales evaluados</h3>
             <p>El 5&thinsp;% de toda la poblaci&oacute;n nacional de Aberdeen Angus, con datos cient&iacute;ficos acumulados a&ntilde;o a a&ntilde;o.</p>
           </div>
-          <div class="g-card">
-            <div class="g-card-label">Objetivos de selecci&oacute;n</div>
+          <div class="gcard">
+            <div class="gcard-label">Objetivos de selecci&oacute;n</div>
             <h3>Fertilidad, Rusticidad, Peso y Carcasa</h3>
             <p>Ganados d&uacute;ctiles adaptables a distintos ambientes y contingencias productivas del Uruguay y la regi&oacute;n.</p>
           </div>
-          <div class="g-card">
-            <div class="g-card-label">Tecnolog&iacute;a</div>
-            <h3>DEPs y precisi&oacute;n gen&eacute;tica</h3>
-            <p>Incorporaci&oacute;n constante de herramientas modernas de selecci&oacute;n para maximizar el progreso gen&eacute;tico ciclo a ciclo.</p>
+          <div class="gcard">
+            <div class="gcard-label">Precisi&oacute;n gen&eacute;tica</div>
+            <h3>Tecnolog&iacute;a aplicada a la selecci&oacute;n</h3>
+            <p>Incorporaci&oacute;n constante de herramientas modernas para maximizar el progreso gen&eacute;tico ciclo a ciclo.</p>
           </div>
-          <div class="g-card">
-            <div class="g-card-label">Equilibrio</div>
+          <div class="gcard">
+            <div class="gcard-label">Equilibrio</div>
             <h3>Balance Vaca &mdash; Novillo</h3>
             <p>Cualidades maternas, eficiencia de conversi&oacute;n y calidad de res. Un modelo que funciona para nosotros y para nuestros clientes.</p>
           </div>
         </div>
 
+        <!-- Foto 3: toro Angus de perfil -->
+        <div class="gen-bull-photo">
+          <img src="images/toro-angus.jpg" alt="Toro Aberdeen Angus — Curupy del Salvador" onerror="this.parentElement.style.display='none'">
+        </div>
+
         <div class="results-box">
-          <div class="label">Resultados &mdash; &Uacute;ltimo ciclo</div>
-          <div class="cycle">Ciclo 481 &mdash; HQB High Quality Beef<br>Generaci&oacute;n 2022</div>
-          <div class="results-metrics">
-            <div class="metric">
-              <div class="val">134</div>
-              <div class="lbl">D&iacute;as de corral</div>
-            </div>
-            <div class="metric">
-              <div class="val">1,94&thinsp;kg</div>
-              <div class="lbl">Ganancia diaria</div>
-            </div>
+          <div class="rlabel">Resultados &mdash; &Uacute;ltimo ciclo</div>
+          <div class="rcycle">Ciclo 481 &mdash; HQB High Quality Beef<br>Generaci&oacute;n 2022</div>
+          <div class="metrics">
+            <div class="metric"><div class="mval">134</div><div class="mlbl">D&iacute;as de corral</div></div>
+            <div class="metric"><div class="mval">1,94&thinsp;kg</div><div class="mlbl">Ganancia diaria</div></div>
           </div>
           <ul>
             <li>Testimonio del compromiso con la excelencia y la mejora continua en la producci&oacute;n ganadera</li>
-            <li>Una gu&iacute;a para seguir mej­orando y adapt&aacute;ndonos a las necesidades del mercado</li>
+            <li>Gu&iacute;a para seguir mejorando y adapt&aacute;ndonos a las necesidades del mercado</li>
           </ul>
         </div>
       </div>
@@ -548,408 +556,186 @@ footer { background: #080f18; border-top: 1px solid rgba(255,255,255,0.05); padd
   </div>
 </section>
 
-<!-- ══ CRIOLLOS ═══════════════════════════════════════ -->
-<section id="criollos">
-  <div class="section-inner">
-    <div class="criollos-header reveal">
-      <span class="section-label">Criollos en Curupy del Salvador</span>
-      <h2 class="section-title">Una complementaci&oacute;n perfecta</h2>
-      <div class="section-rule"></div>
-      <p class="section-lead">
-        Las caba&ntilde;as se formaron con objetivos muy claros: proveer un caballo criollo confiable,
-        imprescindible e insustituible en el trabajo diario del campo, bajo la visi&oacute;n de Don Jorge A. Mailhos.
-      </p>
+<!-- ══ CRIOLLOS ════════════════════════════════════════ -->
+<section id="criollos" class="sec bg-warm">
+  <div class="sec-inner">
+    <div class="rv" style="max-width:680px">
+      <span class="s-label">Criollos en Curupy del Salvador</span>
+      <h2 class="s-title">Una complementaci&oacute;n perfecta</h2>
+      <div class="s-rule"></div>
+      <p class="s-lead">Las caba&ntilde;as de Curupy del Salvador se formaron con los objetivos muy claros de Don Jorge A. Mailhos, quien buscaba en el caballo criollo ese compa&ntilde;ero confiable, imprescindible e insustituible en el trabajo diario del campo.</p>
     </div>
 
-    <div class="criollos-grid reveal">
-      <div class="c-card">
-        <div class="c-card-num">01</div>
-        <h3>Selecci&oacute;n exigente</h3>
-        <p>Aplomo, fortaleza del lomo, estructura general, buen hueso y tipicidad racial. La presi&oacute;n de selecci&oacute;n garantiza animales de trabajo confiables.</p>
-      </div>
-      <div class="c-card">
-        <div class="c-card-num">02</div>
-        <h3>Temperamento</h3>
-        <p>Animales de buen temperamento, buena cabeza y buenos andares. Morfol&oacute;gicamente correctos, liberales y mansos, sin problemas de lomo ni espina.</p>
-      </div>
-      <div class="c-card">
-        <div class="c-card-num">03</div>
-        <h3>Prueba en trabajo</h3>
-        <p>Las yeguas domadas se prueban en trabajo diario durante dos o tres a&ntilde;os en la tropilla de la estancia. Solo las mejores pasan al padrillo.</p>
-      </div>
-      <div class="c-card">
-        <div class="c-card-num">04</div>
-        <h3>Or&iacute;genes orientales</h3>
-        <p>Desde 1948, Don Jorge A. Mailhos inscribi&oacute; sus primeros potrillos con el sufijo ORIENTAL, con yeguas de la familia Mailhos y El Divisadero.</p>
-      </div>
-      <div class="c-card">
-        <div class="c-card-num">05</div>
-        <h3>Campeones del Prado</h3>
-        <p>En 1953, Laguna Oriental 23 sale Gran Campe&oacute;n del Prado. Una l&iacute;nea de campeones que contin&uacute;a hasta hoy con sangres de &eacute;lite del criollo uruguayo.</p>
-      </div>
-      <div class="c-card">
-        <div class="c-card-num">06</div>
-        <h3>Potrillos disponibles</h3>
-        <p>En Curupy del Salvador hay disponibilidad de potrillos de dos o tres mejores por generaci&oacute;n, para trabajo y como animales de selecci&oacute;n.</p>
-      </div>
+    <div class="criollos-grid rv">
+      <div class="ccrd"><div class="ccrd-n">01</div><h3>Selecci&oacute;n exigente</h3><p>Aplomo, fortaleza del lomo, buena estructura general, buen hueso, tipicidad racial. La presi&oacute;n de selecci&oacute;n garantiza animales de trabajo confiables y de buena cabeza.</p></div>
+      <div class="ccrd"><div class="ccrd-n">02</div><h3>Temperamento</h3><p>Animales de buen temperamento, buenos andares, morfol&oacute;gicamente correctos, liberales y mansos, sin problemas de lomo ni espina. Buenos andares hacia la manada.</p></div>
+      <div class="ccrd"><div class="ccrd-n">03</div><h3>Prueba en trabajo</h3><p>Las yeguas domadas se prueban en el trabajo diario de todos los d&iacute;as, evalu&aacute;ndolas durante dos o tres a&ntilde;os en la tropilla de la estancia. Solo las mejores pasan al padrillo.</p></div>
+      <div class="ccrd"><div class="ccrd-n">04</div><h3>Or&iacute;genes orientales</h3><p>Or&iacute;genes desde 1948. Don Jorge A. Mailhos inscribi&oacute; sus primeros potrillos con el sufijo ORIENTAL, hijos de yeguas de la familia Mailhos y del Dr. Alejandro Gallinal.</p></div>
+      <div class="ccrd"><div class="ccrd-n">05</div><h3>Campeones del Prado</h3><p>En 1953, Laguna Oriental 23 sale Gran Campe&oacute;n del Prado. En 1954 se incorpora Teru Teru Capit&aacute;n 113, que trabaj&oacute; hasta 1973 generando m&aacute;s de 98 novillos que se transformaron en leyenda.</p></div>
+      <div class="ccrd"><div class="ccrd-n">06</div><h3>Potrillos disponibles</h3><p>En Curupy del Salvador hay disponibilidad de potrillos de dos o tres mejores por generaci&oacute;n. Las yeguas de descarte tambi&eacute;n tienen inter&eacute;s para el trabajo y para otros productores.</p></div>
     </div>
 
-    <div class="criollos-history reveal">
+    <div class="criollos-hist rv">
       <h3>L&iacute;neas de sangre de excelencia</h3>
-      <p>
-        Los or&iacute;genes de las manadas se remontan a 1948. A lo largo de d&eacute;cadas se fueron integrando padrillos
-        de las mejores caballadas del Uruguay y Argentina, construyendo una tropilla de gen&eacute;tica &uacute;nica.
-        Entre los m&aacute;s destacados: Teru Teru Capit&aacute;n 113, que trabaj&oacute; desde 1954 hasta 1973
-        generando m&aacute;s de 98 novillos que se transformaron en leyenda de la producci&oacute;n ganadera uruguaya.
-      </p>
-      <p>
-        A partir de 1976 se utiliz&oacute; a Surubin Oriental como padrillo principal. En 1976 se adquiri&oacute;
-        en Palermo el San Justo 934, que produjo 162 hijos en los planteles de Curupy del Salvador, incluyendo
-        a San Justo 384 &mdash;Gran Campe&oacute;n del Prado. M&aacute;s recientemente se incorporaron Coe&eacute; Pistola
-        y Criollo SG como padrillos de nueva generaci&oacute;n.
-      </p>
-      <div class="bloodlines">
-        <span class="bl-tag">Agu&aacute;r&aacute; Oriental</span>
-        <span class="bl-tag">Pampeiro 88</span>
-        <span class="bl-tag">Timbero</span>
-        <span class="bl-tag">Teru Teru Capit&aacute;n 113</span>
-        <span class="bl-tag">Surubin Oriental</span>
-        <span class="bl-tag">San Justo 934</span>
-        <span class="bl-tag">Cardeal Ancillar</span>
-        <span class="bl-tag">Catepiru</span>
-        <span class="bl-tag">Castor La Invernnada</span>
-        <span class="bl-tag">Coe&eacute; Pistola</span>
-        <span class="bl-tag">Criollo SG</span>
-        <span class="bl-tag">Don Gonzalo Purrete 111</span>
+      <p>Adem&aacute;s de padrillos propios se fueron incorporando las sangres de Agu&aacute;r&aacute; del Dr. Alejandro Gallinal, Pampeiro 88 de Jo&atilde;o Martin da Silva, Timbero (hijo de Guachique Cardal) de Baptista Falucho, Falucho 217 de Pl&aacute;cido Martins y Camoa&t;&iacute; 51 de Oscar Orozco.</p>
+      <p>En 1976 se adquiere en Palermo a San Justo 934, padrillo Surubin Oriental de la caballada de Curupy del Salvador, que trabaj&oacute; hasta 1991. El San Justo 934 produjo 162 hijos en los planteles. San Justo 384, una hija suya, sale Gran Campe&oacute;n del Prado.</p>
+      <p>A partir de 1980 y hasta 1999 los padres m&aacute;s importantes fueron Cardeal Ancillar, Catepiru, Quebrachero Changador, Castor La Invernnada, Don Gonzalo Purrete 111 y Porori Oriental 684. En 1999 se adquiere en Giancoe SG e Co&eacute; Pistola, ampliamente usado hasta 2007.</p>
+      <div class="btags">
+        <span class="btag">Agu&aacute;r&aacute; Oriental</span>
+        <span class="btag">Pampeiro 88</span>
+        <span class="btag">Timbero</span>
+        <span class="btag">Teru Teru Capit&aacute;n 113</span>
+        <span class="btag">Surubin Oriental</span>
+        <span class="btag">San Justo 934</span>
+        <span class="btag">Cardeal Ancillar</span>
+        <span class="btag">Catepiru</span>
+        <span class="btag">Castor La Invernnada</span>
+        <span class="btag">Co&eacute; Pistola</span>
+        <span class="btag">Criollo SG</span>
+        <span class="btag">Don Gonzalo Purrete 111</span>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ══ HISTORIA ═══════════════════════════════════════ -->
-<section id="historia">
-  <div class="section-inner">
-    <div class="historia-header reveal">
-      <span class="section-label">Historia</span>
-      <h2 class="section-title">60 a&ntilde;os de cr&iacute;a Aberdeen Angus</h2>
-      <div class="section-rule"></div>
-      <p class="section-lead">
-        La estancia Curupy del Salvador est&aacute; situada sobre el R&iacute;o San Salvador, entre Palmira
-        y Dolores, Soriano, Uruguay. En esta tierra de pampas y monte, Jorge A. Mailhos inici&oacute; una
-        historia ganadera que hoy supera las seis d&eacute;cadas de excelencia.
-      </p>
+<!-- ══ HISTORIA ════════════════════════════════════════ -->
+<section id="historia" class="sec bg-white">
+  <div class="sec-inner">
+    <div class="rv" style="max-width:680px">
+      <span class="s-label">Historia</span>
+      <h2 class="s-title">60 a&ntilde;os de cr&iacute;a Aberdeen Angus</h2>
+      <div class="s-rule"></div>
+      <p class="s-lead">La estancia Curupy del Salvador est&aacute; situada sobre el R&iacute;o San Salvador, entre Palmira y Dolores, Soriano, Uruguay. En esta tierra de pampas y monte, Jorge A. Mailhos inici&oacute; una historia ganadera que hoy supera las seis d&eacute;cadas de excelencia.</p>
     </div>
 
-    <div class="timeline reveal">
-      <div class="tl-item">
-        <div class="tl-content">
-          <div class="tl-year">D&eacute;cada del &lsquo;60</div>
-          <h4>Los primeros pasos</h4>
-          <p>Jorge A. Mailhos se inicia en la cr&iacute;a de Aberdeen Angus en las costas del R&iacute;o San Salvador. Los primeros sementales fueron Nic-Cap&thinsp;15, importado de Nueva Zelanda, Leadertamu Tamu, Sim&oacute;n&thinsp;40 y Sim&oacute;n&thinsp;42.</p>
-        </div>
-        <div class="tl-dot"></div>
-        <div class="tl-spacer"></div>
+    <div class="tl rv">
+      <div class="tli">
+        <div class="tic"><div class="tiyr">D&eacute;cada del &lsquo;60</div><h4>Los primeros pasos</h4><p>Jorge A. Mailhos se inicia en la cr&iacute;a de Aberdeen Angus en las costas del R&iacute;o San Salvador. Los primeros sementales: Nic-Cap&thinsp;15 (importado de Nueva Zelanda), Leadertamu Tamu, Sim&oacute;n&thinsp;40 y Sim&oacute;n&thinsp;42, hijos de la caba&ntilde;a argentina El Garbino y Leadertamu 749-F.</p></div>
+        <div class="tdot"></div><div class="tisp"></div>
       </div>
-
-      <div class="tl-item">
-        <div class="tl-spacer"></div>
-        <div class="tl-dot"></div>
-        <div class="tl-content">
-          <div class="tl-year">1967</div>
-          <h4>Incorporaci&oacute;n de la inseminaci&oacute;n artificial</h4>
-          <p>Se incorpora la IA como primera herramienta de mejoramiento gen&eacute;tico. Se establecen los primeros criterios de selecci&oacute;n por m&eacute;rito gen&eacute;tico de producci&oacute;n.</p>
-        </div>
+      <div class="tli">
+        <div class="tisp"></div><div class="tdot"></div>
+        <div class="tic"><div class="tiyr">1967</div><h4>Inseminaci&oacute;n artificial</h4><p>Se incorpora la IA como primera herramienta de mejoramiento gen&eacute;tico. Se establecen los primeros criterios de selecci&oacute;n por m&eacute;rito gen&eacute;tico de producci&oacute;n.</p></div>
       </div>
-
-      <div class="tl-item">
-        <div class="tl-content">
-          <div class="tl-year">1974</div>
-          <h4>Teru Teru y las grandes sangres</h4>
-          <p>Se incorporan Pingo Cardal&thinsp;617, Tormentoso&thinsp;705 y Pich&oacute;n. Este per&iacute;odo define la base gen&eacute;tica con selecci&oacute;n rigurosa por producci&oacute;n y carcasa.</p>
-        </div>
-        <div class="tl-dot"></div>
-        <div class="tl-spacer"></div>
+      <div class="tli">
+        <div class="tic"><div class="tiyr">1974</div><h4>Nuevas sangres</h4><p>Se incorporan como padrillos principales T&iacute;c-Cap 15, Tormentoso 705 y Pich&oacute;n (hijo de Pingo Cardal). Este per&iacute;odo consolida la base gen&eacute;tica con selecci&oacute;n rigurosa por producci&oacute;n y carcasa.</p></div>
+        <div class="tdot"></div><div class="tisp"></div>
       </div>
-
-      <div class="tl-item">
-        <div class="tl-spacer"></div>
-        <div class="tl-dot"></div>
-        <div class="tl-content">
-          <div class="tl-year">1976&thinsp;&ndash;&thinsp;1982</div>
-          <h4>La era Surubin Oriental</h4>
-          <p>Surubin Oriental como principal padrillo. Este legendario semental gener&oacute; 98 hijos que se transformaron en referencia de la producci&oacute;n ganadera uruguaya.</p>
-        </div>
+      <div class="tli">
+        <div class="tisp"></div><div class="tdot"></div>
+        <div class="tic"><div class="tiyr">1976&thinsp;&ndash;&thinsp;1982</div><h4>La era Surubin Oriental</h4><p>Surubin Oriental como principal padrillo. Gener&oacute; 98 hijos que se transformaron en leyenda de la producci&oacute;n ganadera uruguaya, con potros todav&iacute;a recordados por su incansable trabajo.</p></div>
       </div>
-
-      <div class="tl-item">
-        <div class="tl-content">
-          <div class="tl-year">1977</div>
-          <h4>Traslado a Soriano</h4>
-          <p>Las manadas de Don Jorge Mailhos se trasladan a Curupy del Salvador, en la costa del San Salvador, departamento de Soriano, consolidando el campo como centro gen&eacute;tico.</p>
-        </div>
-        <div class="tl-dot"></div>
-        <div class="tl-spacer"></div>
+      <div class="tli">
+        <div class="tic"><div class="tiyr">1977</div><h4>Traslado a Soriano</h4><p>La mayor&iacute;a de las manadas de Don Jorge Mailhos se trasladan a Curupy del Salvador, en la costa del San Salvador, departamento de Soriano, consolidando el campo como centro gen&eacute;tico principal.</p></div>
+        <div class="tdot"></div><div class="tisp"></div>
       </div>
-
-      <div class="tl-item">
-        <div class="tl-spacer"></div>
-        <div class="tl-dot"></div>
-        <div class="tl-content">
-          <div class="tl-year">1980&thinsp;&ndash;&thinsp;1999</div>
-          <h4>Diversificaci&oacute;n gen&eacute;tica</h4>
-          <p>Incorporaci&oacute;n de nuevas sangres: Cardeal Ancillar, Catepiru, Quebrachero Changador, Castor La Invernnada y Don Gonzalo Purrete&thinsp;111. El San Justo&thinsp;934 produjo 162 hijos en el plantel.</p>
-        </div>
+      <div class="tli">
+        <div class="tisp"></div><div class="tdot"></div>
+        <div class="tic"><div class="tiyr">1980&thinsp;&ndash;&thinsp;1999</div><h4>Diversificaci&oacute;n gen&eacute;tica</h4><p>Padrillos destacados: Cardeal Ancillar, Catepiru, Quebrachero Changador, Castor La Invernnada, Don Gonzalo Purrete 111 y Porori Oriental 684. El San Justo 934 produjo 162 hijos de gran calidad.</p></div>
       </div>
-
-      <div class="tl-item">
-        <div class="tl-content">
-          <div class="tl-year">1999</div>
-          <h4>Coe&eacute; Pistola</h4>
-          <p>Se adquiere Coe&eacute; Pistola, overo colorado ampliamente utilizado hasta 2007. En las empardadas de 2007 y 2008 tambi&eacute;n trabaj&oacute; Contrabajo Pihuelo, sumando calidad al rodeo.</p>
-        </div>
-        <div class="tl-dot"></div>
-        <div class="tl-spacer"></div>
+      <div class="tli">
+        <div class="tic"><div class="tiyr">1999</div><h4>Co&eacute; Pistola</h4><p>Se adquiere en Giancoe SG e Co&eacute; Pistola, overo colorado ampliamente utilizado hasta 2007. En las empardadas de 2007 y 2008 tambi&eacute;n trabaj&oacute; Contrabajo Pihuelo.</p></div>
+        <div class="tdot"></div><div class="tisp"></div>
       </div>
-
-      <div class="tl-item">
-        <div class="tl-spacer"></div>
-        <div class="tl-dot"></div>
-        <div class="tl-content">
-          <div class="tl-year">2019&thinsp;&ndash;&thinsp;Hoy</div>
-          <h4>Criollo SG y nueva generaci&oacute;n</h4>
-          <p>Incorporaci&oacute;n de Criollo SG como padrillo principal. Curupy del Salvador consolida su posici&oacute;n como referente gen&eacute;tico con m&aacute;s de 15.500 animales evaluados.</p>
-        </div>
+      <div class="tli">
+        <div class="tisp"></div><div class="tdot"></div>
+        <div class="tic"><div class="tiyr">2019&thinsp;&ndash;&thinsp;Hoy</div><h4>Criollo SG y nueva generaci&oacute;n</h4><p>Incorporaci&oacute;n de Criollo SG. Curupy del Salvador consolida su posici&oacute;n como referente gen&eacute;tico con m&aacute;s de 15.500 animales evaluados y resultados medibles ciclo a ciclo.</p></div>
       </div>
     </div>
 
-    <div class="historia-quote reveal">
-      <blockquote>
-        &ldquo;En Curupy del Salvador hay oportunidades para cada productor. Todo lo que funciona bien
-        para nosotros ha funcionado bien para nuestros clientes, por lo que podemos ofrecerlo con mucha confianza.&rdquo;
-      </blockquote>
+    <div class="hist-quote rv">
+      <blockquote>&ldquo;En Curupy del Salvador hay oportunidades para cada productor. Todo lo que funciona bien para nosotros ha funcionado bien para nuestros clientes, por lo que podemos ofrecerlo con mucha confianza.&rdquo;</blockquote>
       <cite>Curupy del Salvador &mdash; Dolores, Soriano, Uruguay</cite>
     </div>
   </div>
 </section>
 
-<!-- ══ COMUNICACIÓN ══════════════════════════════════ -->
-<section id="comunicacion">
-  <div class="section-inner">
-    <div class="com-header reveal">
-      <span class="section-label">Comunicaci&oacute;n</span>
-      <h2 class="section-title">Nuestra gen&eacute;tica, en cada imagen</h2>
-      <div class="section-rule"></div>
-      <p class="section-lead">
-        Compartimos el trabajo diario, los resultados de cada ciclo y la ciencia detr&aacute;s de la
-        selecci&oacute;n gen&eacute;tica que realizamos en Curupy del Salvador.
-      </p>
+<!-- ══ COMUNICACIÓN ════════════════════════════════════ -->
+<section id="comunicacion" class="sec bg-warm">
+  <div class="sec-inner">
+    <div class="rv" style="max-width:640px">
+      <span class="s-label">Comunicaci&oacute;n</span>
+      <h2 class="s-title">Nuestra gen&eacute;tica, en cada imagen</h2>
+      <div class="s-rule"></div>
+      <p class="s-lead">Compartimos el trabajo diario, los resultados de cada ciclo y la ciencia detr&aacute;s de la selecci&oacute;n gen&eacute;tica en Curupy del Salvador.</p>
     </div>
 
-    <div class="videos-grid reveal">
-      <div class="video-card">
-        <div class="video-thumb">
-          <div class="video-bg"></div>
-          <div class="video-brand">Curupy del Salvador</div>
-          <div class="play-btn"><div class="play-icon"></div></div>
-        </div>
-        <div class="video-info">
-          <h3>Video Institucional Curupy del Salvador</h3>
-          <p>Conoc&eacute; la historia, la gente y la gen&eacute;tica que hace grande a Curupy del Salvador.</p>
-        </div>
-      </div>
-
-      <div class="video-card">
-        <div class="video-thumb">
-          <div class="video-bg"></div>
-          <div class="video-brand">DEPS &mdash; Herramienta<br>segura de selecci&oacute;n</div>
-          <div class="play-btn"><div class="play-icon"></div></div>
-        </div>
-        <div class="video-info">
-          <h3>DEPS &mdash; Una herramienta segura de selecci&oacute;n</h3>
-          <p>Los &uacute;ltimos 20 a&ntilde;os de un caso real. Presentaci&oacute;n por PRE y Asociaci&oacute;n.</p>
-        </div>
-      </div>
-
-      <div class="video-card">
-        <div class="video-thumb">
-          <div class="video-bg"></div>
-          <div class="video-brand">Curupy del Salvador</div>
-          <div class="play-btn"><div class="play-icon"></div></div>
-        </div>
-        <div class="video-info">
-          <h3>Presentaci&oacute;n Ing. Agr. Lucas Gremminger</h3>
-          <p>El administrador de Curupy del Salvador presenta el programa gen&eacute;tico y los resultados obtenidos.</p>
-        </div>
-      </div>
-
-      <div class="video-card">
-        <div class="video-thumb">
-          <div class="video-bg"></div>
-          <div class="video-brand">Curupy del Salvador</div>
-          <div class="play-btn"><div class="play-icon"></div></div>
-        </div>
-        <div class="video-info">
-          <h3>Precisi&oacute;n gen&eacute;tica para producir ganados d&uacute;ctiles</h3>
-          <p>C&oacute;mo la precisi&oacute;n en los datos y la tecnolog&iacute;a nos permite producir animales adaptables.</p>
-        </div>
-      </div>
-
-      <div class="video-card">
-        <div class="video-thumb">
-          <div class="video-bg"></div>
-          <div class="video-brand">Curupy del Salvador</div>
-          <div class="play-btn"><div class="play-icon"></div></div>
-        </div>
-        <div class="video-info">
-          <h3>Resultados consistentes, ciclo tras ciclo</h3>
-          <p>La consistencia como diferencial: m&eacute;tricas reales de producci&oacute;n a lo largo del tiempo.</p>
-        </div>
-      </div>
-
-      <div class="video-card">
-        <div class="video-thumb">
-          <div class="video-bg"></div>
-          <div class="video-brand">Curupy del Salvador</div>
-          <div class="play-btn"><div class="play-icon"></div></div>
-        </div>
-        <div class="video-info">
-          <h3>Rumbo cierto y resultados seguros</h3>
-          <p>Al invertir en gen&eacute;tica Angus, elija resultados consistentes. En tiempos dif&iacute;ciles, nada vale m&aacute;s que un rumbo cierto.</p>
-        </div>
-      </div>
-    </div>
-
-    <div class="com-note reveal">
-      Para ver todos nuestros videos y contenidos ingresar&nbsp; a nuestro canal institucional.
+    <div class="vid-grid rv">
+      <div class="vcrd"><div class="vthumb"><div class="vbg"></div><div class="vbrand">Curupy del Salvador</div><div class="vplay"><div class="varrow"></div></div></div><div class="vinfo"><h3>Video Institucional Curupy del Salvador</h3><p>Conoc&eacute; la historia, la gente y la gen&eacute;tica que hace grande a Curupy del Salvador.</p></div></div>
+      <div class="vcrd"><div class="vthumb"><div class="vbg"></div><div class="vbrand">DEPS &mdash; Herramienta segura de selecci&oacute;n</div><div class="vplay"><div class="varrow"></div></div></div><div class="vinfo"><h3>DEPS &mdash; Una herramienta segura de selecci&oacute;n</h3><p>Los &uacute;ltimos 20 a&ntilde;os de un caso real. Presentaci&oacute;n por PRE y Asociaci&oacute;n.</p></div></div>
+      <div class="vcrd"><div class="vthumb"><div class="vbg"></div><div class="vbrand">Curupy del Salvador</div><div class="vplay"><div class="varrow"></div></div></div><div class="vinfo"><h3>Presentaci&oacute;n Ing. Agr. Lucas Gremminger</h3><p>El administrador de Curupy del Salvador presenta el programa gen&eacute;tico y los resultados obtenidos.</p></div></div>
+      <div class="vcrd"><div class="vthumb"><div class="vbg"></div><div class="vbrand">Curupy del Salvador</div><div class="vplay"><div class="varrow"></div></div></div><div class="vinfo"><h3>Precisi&oacute;n gen&eacute;tica para producir ganados d&uacute;ctiles</h3><p>C&oacute;mo la precisi&oacute;n en los datos y la tecnolog&iacute;a nos permite producir animales adaptables.</p></div></div>
+      <div class="vcrd"><div class="vthumb"><div class="vbg"></div><div class="vbrand">Curupy del Salvador</div><div class="vplay"><div class="varrow"></div></div></div><div class="vinfo"><h3>Resultados consistentes, ciclo tras ciclo</h3><p>La consistencia como diferencial: m&eacute;tricas reales de producci&oacute;n a lo largo del tiempo.</p></div></div>
+      <div class="vcrd"><div class="vthumb"><div class="vbg"></div><div class="vbrand">Curupy del Salvador</div><div class="vplay"><div class="varrow"></div></div></div><div class="vinfo"><h3>En tiempos dif&iacute;ciles, nada vale m&aacute;s que un rumbo cierto</h3><p>Al invertir en gen&eacute;tica Angus, elija resultados consistentes. Rumbo cierto y resultados seguros.</p></div></div>
     </div>
   </div>
 </section>
 
-<!-- ══ MAPA ═══════════════════════════════════════════ -->
-<section id="mapa">
-  <div class="section-inner">
-    <div class="reveal">
-      <span class="section-label">Ubicaci&oacute;n</span>
-      <h2 class="section-title">C&oacute;mo llegar a Curupy del Salvador</h2>
-      <div class="section-rule"></div>
+<!-- ══ MAPA ════════════════════════════════════════════ -->
+<section id="mapa" class="sec bg-white">
+  <div class="sec-inner">
+    <div class="rv">
+      <span class="s-label">Ubicaci&oacute;n</span>
+      <h2 class="s-title">C&oacute;mo llegar a Curupy del Salvador</h2>
+      <div class="s-rule"></div>
     </div>
-
     <div class="mapa-grid">
-      <div class="reveal">
-        <div class="mapa-detail">
-          <div class="lbl">Establecimiento</div>
-          <div class="val">Curupy del Salvador</div>
-        </div>
-        <div class="mapa-detail">
-          <div class="lbl">Direcci&oacute;n</div>
-          <div class="val">Ruta 96, Dolores<br>Soriano, Uruguay</div>
-        </div>
-        <div class="mapa-detail">
-          <div class="lbl">Tel&eacute;fono</div>
-          <div class="val">095&thinsp;532&thinsp;663</div>
-        </div>
-        <div class="mapa-detail">
-          <div class="lbl">Ubicaci&oacute;n</div>
-          <div class="val">Sobre el R&iacute;o San Salvador, entre Palmira y Dolores</div>
-        </div>
-        <div class="mapa-detail">
-          <div class="lbl">Especialidad</div>
-          <div class="val">Gen&eacute;tica Aberdeen Angus &amp; Criollos Orientales</div>
-        </div>
-        <a href="https://maps.google.com/?q=Dolores,Soriano,Uruguay" target="_blank" rel="noopener" class="mapa-cta">
-          Abrir en Google Maps &rarr;
-        </a>
+      <div class="rv">
+        <div class="mdet"><div class="ml">Establecimiento</div><div class="mv">Curupy del Salvador</div></div>
+        <div class="mdet"><div class="ml">Direcci&oacute;n</div><div class="mv">Ruta 96, Dolores<br>Soriano, Uruguay</div></div>
+        <div class="mdet"><div class="ml">Tel&eacute;fono</div><div class="mv">095&thinsp;532&thinsp;663</div></div>
+        <div class="mdet"><div class="ml">Ubicaci&oacute;n</div><div class="mv">Sobre el R&iacute;o San Salvador, entre Palmira y Dolores</div></div>
+        <div class="mdet"><div class="ml">Especialidad</div><div class="mv">Gen&eacute;tica Aberdeen Angus &amp; Criollos Orientales</div></div>
+        <a href="https://maps.google.com/?q=Dolores,Soriano,Uruguay" target="_blank" rel="noopener" class="mapa-cta">Abrir en Google Maps &rarr;</a>
       </div>
-
-      <div class="reveal">
-        <div class="map-embed">
-          <iframe
-            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d107248.85!2d-58.0500!3d-33.5450!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x95a1a39e7a5f1c3d%3A0x3a2b1c4d5e6f7a8b!2sDolores%2C+Soriano%2C+Uruguay!5e0!3m2!1ses!2suy!4v1684000000000"
-            allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
-            title="Ubicaci&oacute;n de Curupy del Salvador">
-          </iframe>
+      <div class="rv">
+        <div class="map-box">
+          <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d107248.85!2d-58.0500!3d-33.5450!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x95a1a39e7a5f1c3d%3A0x3a2b1c4d5e6f7a8b!2sDolores%2C+Soriano%2C+Uruguay!5e0!3m2!1ses!2suy!4v1684000000000" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Ubicaci&oacute;n Curupy del Salvador"></iframe>
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ══ CONTACTO ═══════════════════════════════════════ -->
-<section id="contacto">
-  <div class="section-inner">
-    <div class="reveal">
-      <span class="section-label">Contacto</span>
-      <h2 class="section-title">&iquest;Listo para invertir<br>en gen&eacute;tica de calidad?</h2>
-      <div class="section-rule"></div>
+<!-- ══ CONTACTO ════════════════════════════════════════ -->
+<section id="contacto" class="sec bg-dark">
+  <div class="sec-inner">
+    <div class="rv">
+      <span class="s-label" style="color:rgba(255,255,255,.35)"">Contacto</span>
+      <h2 class="s-title" style="color:var(--white)">&iquest;Listo para invertir<br>en gen&eacute;tica de calidad?</h2>
+      <div class="s-rule"></div>
     </div>
-
-    <div class="contacto-grid">
-      <div class="contacto-info reveal">
-        <p class="intro">
-          En Curupy del Salvador hay oportunidades para cada productor. Contactenos para conocer
-          nuestra oferta gen&eacute;tica, pr&oacute;ximas remates, disponibilidad de toros y potrillos.
-        </p>
-        <div class="c-detail">
-          <div class="lbl">Establecimiento</div>
-          <div class="val">Curupy del Salvador</div>
-        </div>
-        <div class="c-detail">
-          <div class="lbl">Direcci&oacute;n</div>
-          <div class="val">Ruta 96, Dolores, Soriano, Uruguay</div>
-        </div>
-        <div class="c-detail">
-          <div class="lbl">Tel&eacute;fono</div>
-          <div class="val">095&thinsp;532&thinsp;663</div>
-        </div>
-        <div class="c-detail">
-          <div class="lbl">Pa&iacute;s</div>
-          <div class="val">Uruguay</div>
-        </div>
+    <div class="ctgrid">
+      <div class="ctinfo rv">
+        <p class="intro">En Curupy del Salvador hay oportunidades para cada productor. Cont&aacute;ctenos para conocer nuestra oferta gen&eacute;tica, pr&oacute;ximas remates y disponibilidad de toros y potrillos.</p>
+        <div class="cdtl"><div class="cl">Establecimiento</div><div class="cv">Curupy del Salvador</div></div>
+        <div class="cdtl"><div class="cl">Direcci&oacute;n</div><div class="cv">Ruta 96, Dolores, Soriano, Uruguay</div></div>
+        <div class="cdtl"><div class="cl">Tel&eacute;fono</div><div class="cv">095&thinsp;532&thinsp;663</div></div>
       </div>
-
-      <div class="contacto-form reveal">
+      <div class="ctform rv">
         <h3>Enviar consulta</h3>
-        <div class="f-row">
-          <div class="f-group">
-            <label class="f-label">Nombre *</label>
-            <input type="text" class="f-input" id="f-nombre" placeholder="Su nombre">
-          </div>
-          <div class="f-group">
-            <label class="f-label">Tel&eacute;fono</label>
-            <input type="tel" class="f-input" id="f-tel" placeholder="Ej.&thinsp;091&thinsp;234&thinsp;567">
-          </div>
+        <div class="frow">
+          <div class="fg"><label class="fl">Nombre *</label><input type="text" class="fi" id="fn" placeholder="Su nombre"></div>
+          <div class="fg"><label class="fl">Tel&eacute;fono</label><input type="tel" class="fi" id="ft" placeholder="Ej.&thinsp;091&thinsp;234&thinsp;567"></div>
         </div>
-        <div class="f-group">
-          <label class="f-label">Email *</label>
-          <input type="email" class="f-input" id="f-email" placeholder="su@email.com">
-        </div>
-        <div class="f-group">
-          <label class="f-label">Asunto</label>
-          <input type="text" class="f-input" id="f-asunto" placeholder="Consulta sobre gen&eacute;tica, remates&hellip;">
-        </div>
-        <div class="f-group">
-          <label class="f-label">Mensaje *</label>
-          <textarea class="f-textarea" id="f-mensaje" placeholder="Cu&eacute;ntenos en qu&eacute; podemos ayudarle&hellip;"></textarea>
-        </div>
-        <button class="f-submit" onclick="enviarFormulario()">Enviar mensaje</button>
-        <div class="f-success" id="form-success">Mensaje recibido. Nos pondremos en contacto a la brevedad.</div>
+        <div class="fg"><label class="fl">Email *</label><input type="email" class="fi" id="fe" placeholder="su@email.com"></div>
+        <div class="fg"><label class="fl">Asunto</label><input type="text" class="fi" id="fa" placeholder="Consulta sobre gen&eacute;tica, remates&hellip;"></div>
+        <div class="fg"><label class="fl">Mensaje *</label><textarea class="fta" id="fm" placeholder="Cu&eacute;ntenos en qu&eacute; podemos ayudarle&hellip;"></textarea></div>
+        <button class="fsub" onclick="send()">Enviar mensaje</button>
+        <div class="fok" id="fok">Mensaje recibido. Nos pondremos en contacto a la brevedad.</div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ══ FOOTER ═════════════════════════════════════════ -->
+<!-- ══ FOOTER ══════════════════════════════════════════ -->
 <footer>
-  <div class="footer-inner">
-    <div class="footer-brand">
-      <svg class="footer-logo" viewBox="0 0 60 74" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <use href="#logo-mark"/>
-      </svg>
-      <div class="footer-name">
-        <strong>Curupy del Salvador</strong> &mdash; Aberdeen Angus &middot; Uruguay
-      </div>
+  <div class="ft-inner">
+    <div class="ft-brand">
+      <svg class="ft-logo" viewBox="0 0 60 70" fill="none" xmlns="http://www.w3.org/2000/svg"><use href="#ico"/></svg>
+      <div class="ft-name"><strong>Curupy del Salvador</strong> &mdash; Aberdeen Angus &middot; Uruguay</div>
     </div>
-    <nav class="footer-links">
+    <nav class="ft-links">
       <a href="#inicio">Inicio</a>
       <a href="#genetica">Gen&eacute;tica</a>
       <a href="#criollos">Criollos</a>
@@ -958,68 +744,42 @@ footer { background: #080f18; border-top: 1px solid rgba(255,255,255,0.05); padd
       <a href="#mapa">Mapa</a>
       <a href="#contacto">Contacto</a>
     </nav>
-    <div class="footer-copy">Ruta 96, Dolores, Soriano &mdash; 095&thinsp;532&thinsp;663</div>
+    <div class="ft-copy">Ruta 96, Dolores, Soriano &mdash; 095&thinsp;532&thinsp;663</div>
   </div>
 </footer>
 
 <script>
-// ─── MOBILE MENU ──────────────────────────────────
-var menuOpen = false;
-document.getElementById('menuBtn').addEventListener('click', function () {
-  menuOpen = !menuOpen;
-  document.getElementById('mobileNav').classList.toggle('open', menuOpen);
-});
-function closeMenu() {
-  menuOpen = false;
-  document.getElementById('mobileNav').classList.remove('open');
+// ─── MOBILE MENU
+var mo=false;
+document.getElementById('menuBtn').addEventListener('click',function(){mo=!mo;document.getElementById('mobNav').classList.toggle('open',mo)});
+function cx(){mo=false;document.getElementById('mobNav').classList.remove('open')}
+
+// ─── ACTIVE NAV LINK
+var ids=['inicio','genetica','criollos','historia','comunicacion','mapa','contacto'];
+var lks=document.querySelectorAll('.nav-links a:not(.nav-cta)');
+function upNav(){
+  var y=window.scrollY+80,cur=ids[0];
+  ids.forEach(function(id){var el=document.getElementById(id);if(el&&el.offsetTop<=y)cur=id});
+  lks.forEach(function(a){a.classList.toggle('active',a.getAttribute('href')==='#'+cur)});
 }
+window.addEventListener('scroll',upNav,{passive:true});upNav();
 
-// ─── ACTIVE NAV LINK ──────────────────────────────
-var ids   = ['inicio','genetica','criollos','historia','comunicacion','mapa','contacto'];
-var links = document.querySelectorAll('.nav-links a:not(.nav-cta)');
-function updateNav() {
-  var y = window.scrollY + 90;
-  var cur = ids[0];
-  ids.forEach(function (id) {
-    var el = document.getElementById(id);
-    if (el && el.offsetTop <= y) cur = id;
-  });
-  links.forEach(function (a) {
-    a.classList.toggle('active', a.getAttribute('href') === '#' + cur);
-  });
-}
-window.addEventListener('scroll', updateNav, { passive: true });
-updateNav();
+// ─── REVEAL
+var ob=new IntersectionObserver(function(en){en.forEach(function(e){if(e.isIntersecting){e.target.classList.add('on');ob.unobserve(e.target)}})},{threshold:.08,rootMargin:'0px 0px -28px 0px'});
+document.querySelectorAll('.rv').forEach(function(el){ob.observe(el)});
 
-// ─── SCROLL REVEAL ────────────────────────────────
-var obs = new IntersectionObserver(function (entries) {
-  entries.forEach(function (e) {
-    if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); }
-  });
-}, { threshold: 0.08, rootMargin: '0px 0px -32px 0px' });
-document.querySelectorAll('.reveal').forEach(function (el) { obs.observe(el); });
-
-// ─── CONTACT FORM ─────────────────────────────────
-function enviarFormulario() {
-  var nombre  = document.getElementById('f-nombre').value.trim();
-  var email   = document.getElementById('f-email').value.trim();
-  var mensaje = document.getElementById('f-mensaje').value.trim();
-  if (!nombre || !email || !mensaje) {
-    alert('Por favor complete los campos obligatorios: Nombre, Email y Mensaje.');
-    return;
-  }
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-    alert('Por favor ingrese un email válido.');
-    return;
-  }
-  var subject = encodeURIComponent(document.getElementById('f-asunto').value || 'Consulta desde el sitio web');
-  var tel     = document.getElementById('f-tel').value || '-';
-  var body    = encodeURIComponent('Nombre: ' + nombre + '\nEmail: ' + email + '\nTeléfono: ' + tel + '\n\n' + mensaje);
-  window.location.href = 'mailto:curupydelsalvador@gmail.com?subject=' + subject + '&body=' + body;
-  document.getElementById('form-success').style.display = 'block';
-  ['f-nombre','f-tel','f-email','f-asunto','f-mensaje'].forEach(function (id) {
-    document.getElementById(id).value = '';
-  });
+// ─── CONTACT FORM
+function send(){
+  var n=document.getElementById('fn').value.trim();
+  var e=document.getElementById('fe').value.trim();
+  var m=document.getElementById('fm').value.trim();
+  if(!n||!e||!m){alert('Por favor complete los campos obligatorios: Nombre, Email y Mensaje.');return}
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e)){alert('Por favor ingrese un email válido.');return}
+  var s=encodeURIComponent(document.getElementById('fa').value||'Consulta desde el sitio web');
+  var b=encodeURIComponent('Nombre: '+n+'\nEmail: '+e+'\nTeléfono: '+(document.getElementById('ft').value||'-')+'\n\n'+m);
+  window.location.href='mailto:curupydelsalvador@gmail.com?subject='+s+'&body='+b;
+  document.getElementById('fok').style.display='block';
+  ['fn','ft','fe','fa','fm'].forEach(function(id){document.getElementById(id).value=''});
 }
 </script>
 </body>
